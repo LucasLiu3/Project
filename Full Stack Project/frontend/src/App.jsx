@@ -1,9 +1,15 @@
+import { useEffect, useState } from "react";
+import Router from "./router/Router";
+import publicRoutes from "./router/routes/publicRoute";
+import { allPrivateRoutes } from "./router/routes";
+
 export default function App() {
-  return (
-    <div className="App">
-      <h1 className="text-3xl font-bold underline">
-        Hello Full stack project!
-      </h1>
-    </div>
-  );
+  const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
+
+  useEffect(function () {
+    const routes = allPrivateRoutes();
+    setAllRoutes((allRoutes) => [...allRoutes, routes]);
+  }, []);
+
+  return <Router allRouters={allRoutes}></Router>;
 }

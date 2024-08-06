@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff; /* 设置文字颜色 */
+  -webkit-box-shadow: 0 0 0px 1000px 6f68d1 inset; /* 设置背景颜色, #1a202c 是 Tailwind 的灰色 */
+  transition: background-color 5000s ease-in-out 0s; /* 确保背景颜色平滑过渡 */
+}
