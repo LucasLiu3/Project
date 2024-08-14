@@ -29,7 +29,7 @@ function AdminLogin() {
       if (successMessage) {
         toast.success(successMessage);
         dispatch(messageClear());
-        navigate("/");
+        navigate("/admin/dashboard");
       }
       if (errorMessage) {
         toast.error(errorMessage);
