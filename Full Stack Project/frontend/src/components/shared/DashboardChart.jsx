@@ -1,6 +1,6 @@
 import Chart from "react-apexcharts";
 
-function AdminChart() {
+function DashoboardChart({ role }) {
   const state = {
     series: [
       {
@@ -12,7 +12,7 @@ function AdminChart() {
         data: [67, 39, 45, 56, 90, 56, 23, 56, 87, 78, 67, 78],
       },
       {
-        name: "Sellers",
+        name: `${role === "admin" ? "Sellers" : "Sales"}`,
         data: [34, 39, 56, 56, 80, 67, 23, 56, 98, 78, 45, 56],
       },
     ],
@@ -95,4 +95,4 @@ function AdminChart() {
   );
 }
 
-export default AdminChart;
+export default DashoboardChart;

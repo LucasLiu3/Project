@@ -6,6 +6,9 @@ import { MdPayment } from "react-icons/md";
 import { FaUserTimes } from "react-icons/fa";
 import { FaCodePullRequest } from "react-icons/fa6";
 import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IoChatbubblesOutline } from "react-icons/io5";
+import { GoGift } from "react-icons/go";
+import { CiDiscount1 } from "react-icons/ci";
 
 export const allNav = [
   {
@@ -34,7 +37,7 @@ export const allNav = [
     title: "Sellers",
     icon: <FaUsers></FaUsers>,
     role: "admin",
-    path: "/admin/seller",
+    path: "/admin/sellers",
   },
   {
     id: 5,
@@ -62,6 +65,63 @@ export const allNav = [
     title: "Live Chat",
     icon: <IoChatbubbleEllipsesOutline></IoChatbubbleEllipsesOutline>,
     role: "admin",
-    path: "/admin/live_chat",
+    path: "/admin/chat",
+  },
+  {
+    id: 9,
+    title: "Dashboard",
+    icon: <AiOutlineDashboard></AiOutlineDashboard>,
+    role: "seller",
+    path: "/seller/dashboard",
+  },
+  {
+    id: 10,
+    title: "All Products",
+    icon: <BiCategory></BiCategory>,
+    role: "seller",
+    path: "/seller/products",
+  },
+  {
+    id: 11,
+    title: "New Products",
+    icon: <GoGift></GoGift>,
+    role: "seller",
+    path: "/seller/new_product",
+  },
+  {
+    id: 12,
+    title: "Discount Products",
+    icon: <CiDiscount1></CiDiscount1>,
+    role: "seller",
+    path: "/seller/discount_products",
+  },
+
+  {
+    id: 13,
+    title: "Orders",
+    icon: <IoCartOutline></IoCartOutline>,
+    role: "seller",
+    path: "/seller/orders",
+  },
+  {
+    id: 14,
+    title: "Payments",
+    icon: <MdPayment></MdPayment>,
+    role: "seller",
+    path: "/seller/payments",
+  },
+  {
+    id: 15,
+    title: "Customer-Chat",
+    icon: <IoChatbubblesOutline />,
+    role: "seller",
+    path: "/seller/customer_chat",
+  },
+  {
+    id: 16,
+    title: "Admin-Chat",
+    icon: <IoChatbubbleEllipsesOutline></IoChatbubbleEllipsesOutline>,
+    role: "seller",
+    path: "/seller/admin_chat",
   },
 ];

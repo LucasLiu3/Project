@@ -24,20 +24,17 @@ function AdminLogin() {
     dispatch(adminLogin(state));
   }
 
-  useEffect(
-    function () {
-      if (successMessage) {
-        toast.success(successMessage);
-        dispatch(messageClear());
-        navigate("/admin/dashboard");
-      }
-      if (errorMessage) {
-        toast.error(errorMessage);
-        dispatch(messageClear());
-      }
-    },
-    [successMessage, errorMessage, dispatch, navigate]
-  );
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      navigate("/admin/dashboard");
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, navigate]);
 
   const overRideStyle = {
     display: "flex",
@@ -48,24 +45,23 @@ function AdminLogin() {
   };
 
   return (
-    <div
-      className="min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center
-    "
-    >
-      <div className="w-[400px] text-[#ffffff] p-2">
-        <div className="bg-[#6f68d1] p-4 rounded-md">
-          <div className="h-[70px] flex items-center justify-center">
+    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
+      <div className="w-[400px] p-4">
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="h-[70px] flex items-center justify-center mb-6">
             <div className="w-[180px] h-[50px]">
-              <img className="w-full" src="/images/logo.png" alt="" />
+              <img className="w-full" src="/images/logo.png" alt="Logo" />
             </div>
           </div>
 
           <form onSubmit={submitForm}>
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="email">Email</label>
+            <div className="flex flex-col w-full gap-2 mb-4">
+              <label htmlFor="email" className="text-gray-700">
+                Email
+              </label>
 
               <input
-                className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md"
+                className="px-3 py-2 outline-none border border-gray-300 bg-gray-100 rounded-md text-black"
                 type="email"
                 name="email"
                 placeholder="Email"
@@ -76,11 +72,13 @@ function AdminLogin() {
               />
             </div>
 
-            <div className="flex flex-col w-full gap-1 mb-3">
-              <label htmlFor="password">Password</label>
+            <div className="flex flex-col w-full gap-2 mb-4">
+              <label htmlFor="password" className="text-gray-700">
+                Password
+              </label>
 
               <input
-                className="px-3 py-2 outline-none border border-slate-700 bg-transparent rounded-md"
+                className="px-3 py-2 outline-none border border-gray-300 bg-gray-100 rounded-md"
                 type="password"
                 name="password"
                 placeholder="Password"
@@ -94,8 +92,8 @@ function AdminLogin() {
             </div>
 
             <button
-              disabled={loader ? true : false}
-              className="bg-slate-700 w-full hover:shadow-blue-300/50 hover:shadow-lg text-white rounded-md px-7 py-2 mb-3"
+              disabled={loader}
+              className="bg-blue-600 w-full hover:bg-blue-700 text-white rounded-md px-7 py-2 mb-4"
             >
               {loader ? (
                 <PropagateLoader color="#ffffff" cssOverride={overRideStyle} />

@@ -24,13 +24,13 @@ function SideBar({ showSidebar, setShowSidebar }) {
         className={`w-[260px] fixed bg-[#e6e7fb] z-50 top-0 h-screen shadow-[0_0_15px_0_rgb(34_41_47_/5%)]
           transition-all ${showSidebar ? "left-0" : "-left-[260px] lg:left-0"}`}
       >
-        <div className="h-70px flex justify-center items-center">
+        <div className="h-70px flex justify-center items-center mt-6">
           <Link to="/" className="w-[180px] h-[60px]">
             <img src="/images/logo.png" className="w-full h-full" alt="" />
           </Link>
         </div>
 
-        <div className="px-[16px] ">
+        <div className="px-[16px] mt-10 ">
           {allNav.map((nav, i) => (
             <NavLink
               key={i}

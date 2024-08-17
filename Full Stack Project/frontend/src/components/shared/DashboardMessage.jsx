@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function AdminMessage() {
+function DashboardMessage({ role }) {
   return (
     <div className="w-full bg-[#6a5fdf] p-4 rounded-md text-[#d0d2d6]">
       <div className="flex justify-between items-center font-semibold pb-3">
@@ -21,7 +21,9 @@ function AdminMessage() {
 
             <div className="p-3 bg-slate-800 rounded-lg border border-slate-500 shadow-sm">
               <div className="flex justify-between items-center mb-2">
-                <Link className="text-md font-normal">Admin</Link>
+                <Link className="text-md font-normal">
+                  {role === "admin" ? "Seller" : "Customer"}
+                </Link>
                 <time className="mb-1 text-sm font-normal sm:order-last sm:mb-0">
                   2 days ago
                 </time>
@@ -38,4 +40,4 @@ function AdminMessage() {
   );
 }
 
-export default AdminMessage;
+export default DashboardMessage;

@@ -5,50 +5,75 @@ import { HeadModule } from "../../components/shared/HeadModule";
 import { ContentModule } from "./../../components/shared/ContentModule";
 import Filter from "../../components/shared/Filter";
 
-function AdminOrderPage() {
+function SellerAllProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
   const [searchContent, setSearchContent] = useState("");
 
   const headerTitle = [
-    "Order Id",
+    "Product ID",
+    "Image",
+    "Product Name",
+    "Category",
+    "Brand",
     "Price",
-    "Payment Status",
-    "Order Status",
+    "Discount",
+
+    "Stock",
     "Action",
   ];
 
   const fakeContent = [
     {
-      orderId: 1,
+      productId: 1,
+      image: "1.jpg",
+      productName: "Product 1",
+      category: "Shoes",
+      brand: "brand1",
       price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+      discount: "20%",
+      stock: "2",
     },
     {
-      orderId: 1,
+      productId: 1,
+      image: "1.jpg",
+      productName: "Product 1",
+      category: "Shoes",
+      brand: "brand1",
       price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+      discount: "20%",
+      stock: "2",
     },
     {
-      orderId: 1,
+      productId: 1,
+      image: "1.jpg",
+      productName: "Product 1",
+      category: "Shoes",
+      brand: "brand1",
       price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+      discount: "20%",
+      stock: "2",
     },
     {
-      orderId: 1,
+      productId: 1,
+      image: "1.jpg",
+      productName: "Product 1",
+      category: "Shoes",
+      brand: "brand1",
       price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+      discount: "20%",
+      stock: "2",
     },
     {
-      orderId: 1,
+      productId: 1,
+      image: "1.jpg",
+      productName: "Product 1",
+      category: "Shoes",
+      brand: "brand1",
       price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+      discount: "20%",
+      stock: "2",
     },
   ];
 
@@ -60,7 +85,7 @@ function AdminOrderPage() {
         setSearchContent={setSearchContent}
       ></Filter>
 
-      <div className="relative mt-5 overflow-y-auto">
+      <div className="relative mt-5 overflow-y-auto overflow-x-hidden">
         <table className="w-full text-sm text-[#d0d2d6]">
           <thead className=" uppercase border-b border-slate-700">
             <HeadModule headerTitle={headerTitle}></HeadModule>
@@ -85,4 +110,4 @@ function AdminOrderPage() {
   );
 }
 
-export default AdminOrderPage;
+export default SellerAllProducts;

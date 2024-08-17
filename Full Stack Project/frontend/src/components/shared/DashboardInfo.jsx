@@ -3,7 +3,7 @@ import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 
-function AdminShowInfo() {
+function DashboardInfo() {
   const displayInfo = [
     {
       title: "Total Sales",
@@ -67,4 +67,4 @@ function AdminShowInfo() {
   });
 }
 
-export default AdminShowInfo;
+export default DashboardInfo;

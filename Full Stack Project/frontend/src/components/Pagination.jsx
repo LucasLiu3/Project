@@ -1,3 +1,8 @@
+import {
+  MdOutlineKeyboardDoubleArrowLeft,
+  MdOutlineKeyboardDoubleArrowRight,
+} from "react-icons/md";
+
 function Pagination({
   currentPage,
   setCurrentPage,
@@ -7,14 +12,18 @@ function Pagination({
 }) {
   const totalPage = Math.ceil(totalItem / perPage);
 
-  const startPage = currentPage <= 0 ? 1 : currentPage;
-
-  const endPage = startPage === 1 ? showPageNmber : showPageNmber + startPage;
+  let startPage = Math.max(
+    1,
+    Math.min(
+      currentPage - Math.floor(showPageNmber / 2),
+      totalPage - showPageNmber + 1
+    )
+  );
+  let endPage = Math.min(startPage + showPageNmber - 1, totalPage);
 
   function createBtn() {
     const btns = [];
-
-    for (let i = startPage; i < endPage; i++) {
+    for (let i = startPage; i <= endPage; i++) {
       btns.push(
         <li
           key={i}
@@ -23,20 +32,38 @@ function Pagination({
             currentPage === i
               ? "bg-indigo-300 shadow-lg shadow-indigo-300/50 text-white"
               : "bg-slate-600 hover:bg-indigo-400 shadow-lg hover:shadow-indigo-500/50 hover:text-white text-[#d0d2d6]"
-          } w-[33px] h-[33px] rounded-full flex justify-center items-center cursor-pointer `}
+          } w-[30px] h-[30px] rounded-full flex justify-center items-center cursor-pointer `}
         >
           {i}
         </li>
       );
-
-      return btns;
     }
+    return btns;
   }
 
   return (
     <ul className="flex gap-3">
-      {currentPage > 1 && <button>Left</button>}
-      {createBtn()}
+      {totalPage > 1 && (
+        <>
+          {currentPage > 1 && (
+            <li
+              className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-slate-300 text-[#000000] cursor-pointer"
+              onClick={() => setCurrentPage(currentPage - 1)}
+            >
+              <MdOutlineKeyboardDoubleArrowLeft />
+            </li>
+          )}
+          {createBtn()}
+          {endPage < totalPage && (
+            <li
+              className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-slate-300 text-[#000000] cursor-pointer"
+              onClick={() => setCurrentPage(currentPage + 1)}
+            >
+              <MdOutlineKeyboardDoubleArrowRight />
+            </li>
+          )}
+        </>
+      )}
     </ul>
   );
 }
