@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import AdminCategoryForm from "./../../components/admin/AdminCategoryForm";
 import Pagination from "../../components/Pagination";
@@ -6,22 +6,44 @@ import Pagination from "../../components/Pagination";
 import { HeadModule } from "../../components/shared/HeadModule";
 import { ContentModule } from "../../components/shared/ContentModule";
 import Filter from "../../components/shared/Filter";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "../../store/Reducers/categoryReducer";
 
 function AdminCategoryPage() {
+  const dispatch = useDispatch();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
-
   const [searchContent, setSearchContent] = useState("");
 
   const headerTitle = ["No", "Image", "Name", "Action"];
 
-  const fakeContent = [
-    { image: "1.jpg", name: "Shoes" },
-    { image: "2.jpg", name: "Watches" },
-    { image: "3.jpg", name: "Clothes" },
-    { image: "4.jpg", name: "Bags" },
-    { image: "5.jpg", name: "Furniture" },
-  ];
+  const { loader, category } = useSelector((state) => state.category);
+
+  const categoryContent = category.map((each, index) => ({
+    number: index,
+    name: each.slug,
+    image: each.image,
+  }));
+
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  let selectedCategory = categoryContent.slice(startIndex, endIndex);
+
+  console.log(searchContent);
+  if (searchContent) {
+    selectedCategory = selectedCategory.filter(
+      (each) =>
+        each.name.toLowerCase().indexOf(searchContent.toLowerCase()) > -1
+    );
+  }
+
+  useEffect(
+    function () {
+      dispatch(getCategory());
+    },
+    [dispatch]
+  );
 
   return (
     <div className=" flex flex-wrap w-full">
@@ -39,7 +61,7 @@ function AdminCategoryPage() {
             </thead>
 
             <tbody>
-              <ContentModule imageDate={fakeContent}></ContentModule>
+              <ContentModule imageDate={selectedCategory}></ContentModule>
             </tbody>
           </table>
         </div>
@@ -49,7 +71,7 @@ function AdminCategoryPage() {
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             perPage={perPage}
-            totalItem={5}
+            totalItem={categoryContent.length}
             showPageNmber={3}
           ></Pagination>
         </div>

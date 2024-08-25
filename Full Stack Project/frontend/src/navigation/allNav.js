@@ -9,6 +9,7 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { IoChatbubblesOutline } from "react-icons/io5";
 import { GoGift } from "react-icons/go";
 import { CiDiscount1 } from "react-icons/ci";
+import { CgProfile } from "react-icons/cg";
 
 export const allNav = [
   {
@@ -123,5 +124,12 @@ export const allNav = [
     icon: <IoChatbubbleEllipsesOutline></IoChatbubbleEllipsesOutline>,
     role: "seller",
     path: "/seller/admin_chat",
+  },
+  {
+    id: 16,
+    title: "Profile",
+    icon: <CgProfile />,
+    role: "seller",
+    path: "/seller/profile",
   },
 ];

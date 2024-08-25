@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-export function ContentModule({ numberDate, imageDate }) {
+export function ContentModule({ numberDate, imageDate, role }) {
   if (numberDate) {
     return numberDate.map((each, index) => (
       <tr key={index}>
@@ -16,7 +16,7 @@ export function ContentModule({ numberDate, imageDate }) {
     return imageDate.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-          {index + 1}
+          {each.number ? each.number + 1 : index + 1}
         </th>
 
         {each.image && (
@@ -24,11 +24,7 @@ export function ContentModule({ numberDate, imageDate }) {
             scope="row"
             className="py-2 px-6 font-medium whitespace-nowrap flex justify-center "
           >
-            <img
-              src={`/images/category/${each.image}`}
-              alt=""
-              className="w-[50px] h-[50px]"
-            />
+            <img src={`${each.image}`} alt="" className="w-[50px] h-[50px]" />
           </th>
         )}
 
@@ -120,7 +116,11 @@ export function ContentModule({ numberDate, imageDate }) {
           <div className="flex justify-center items-center gap-5">
             {each.status || each.orderStatue ? (
               <Link
-                to={`/admin/${each.orderStatue ? "order" : "seller"}/2`}
+                to={
+                  role === "seller"
+                    ? `/seller/order/2`
+                    : `/admin/${each.orderStatue ? "order" : "seller"}/2`
+                }
                 className="p-[6px] bg-green-500 rounded-full hover:shadow-lg hover:shadow-green-500/50"
               >
                 <FaEye className="w-[18px] h-[18px]" />
@@ -131,7 +131,10 @@ export function ContentModule({ numberDate, imageDate }) {
               </button>
             ) : (
               <>
-                <Link className="p-[6px] bg-yellow-500 rounded-full hover:shadow-lg hover:shadow-yellow-500/50">
+                <Link
+                  to={`/seller/product/edit/2`}
+                  className="p-[6px] bg-yellow-500 rounded-full hover:shadow-lg hover:shadow-yellow-500/50"
+                >
                   <FaEdit className="w-[18px] h-[18px]" />
                 </Link>{" "}
                 <Link className="p-[6px] bg-red-500 rounded-full hover:shadow-lg hover:shadow-red-500/50">

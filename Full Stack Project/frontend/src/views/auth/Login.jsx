@@ -1,9 +1,23 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { sellerLogin, messageClear } from "../../store/Reducers/authReducer";
+import { useNavigate } from "react-router-dom";
+
+import { PropagateLoader } from "react-spinners";
 import { FaGoogle } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 
+import toast from "react-hot-toast";
+
 function Login() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loader, successMessage, errorMessage } = useSelector(
+    (state) => state.auth
+  );
+
   const [state, setState] = useState({
     email: "",
     password: "",
@@ -11,10 +25,30 @@ function Login() {
 
   function submitForm(e) {
     e.preventDefault();
-    console.log(state);
 
+    dispatch(sellerLogin(state));
     setState({ email: "", password: "" });
   }
+
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      navigate("/");
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, navigate]);
+
+  const overRideStyle = {
+    display: "flex",
+    margin: "0 auto",
+    height: "24px",
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   return (
     <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
@@ -64,8 +98,15 @@ function Login() {
               />
             </div>
 
-            <button className="bg-blue-600 w-full hover:shadow-blue-400/50 hover:shadow-lg text-white rounded-md px-7 py-2 mb-4">
-              Log in
+            <button
+              disabled={loader}
+              className="bg-blue-600 w-full hover:bg-blue-700 text-white rounded-md px-7 py-2 mb-4"
+            >
+              {loader ? (
+                <PropagateLoader color="#ffffff" cssOverride={overRideStyle} />
+              ) : (
+                "Log in"
+              )}
             </button>
 
             <div className="flex items-center mb-4 gap-3 justify-center">

@@ -2,14 +2,20 @@ import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { getNav } from "../navigation";
 import { MdOutlineLogout } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 
 function SideBar({ showSidebar, setShowSidebar }) {
   const [allNav, setAllNav] = useState([]);
 
-  useEffect(function () {
-    const navs = getNav("admin");
-    setAllNav(navs);
-  }, []);
+  const { role } = useSelector((state) => state.auth);
+
+  useEffect(
+    function () {
+      const navs = getNav(role);
+      setAllNav(navs);
+    },
+    [role]
+  );
 
   return (
     <div>

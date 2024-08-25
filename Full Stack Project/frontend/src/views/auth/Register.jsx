@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { sellerRegister, messageClear } from "../../store/Reducers/authReducer";
+import { useNavigate } from "react-router-dom";
+import { PropagateLoader } from "react-spinners";
+
+import toast from "react-hot-toast";
 
 function Register() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { loader, successMessage, errorMessage } = useSelector(
+    (state) => state.auth
+  );
+
   const [state, setState] = useState({
     name: "",
     email: "",
@@ -12,7 +25,11 @@ function Register() {
 
   function submitForm(e) {
     e.preventDefault();
-    console.log(state);
+    if (state.password !== state.confirmPassword) {
+      return toast.error("Passwords should same");
+    }
+
+    dispatch(sellerRegister(state));
 
     setState({
       name: "",
@@ -21,6 +38,26 @@ function Register() {
       confirmPassword: "",
     });
   }
+
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      navigate("/");
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, navigate]);
+
+  const overRideStyle = {
+    display: "flex",
+    margin: "0 auto",
+    height: "24px",
+    justifyContent: "center",
+    alignItems: "center",
+  };
 
   return (
     <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
@@ -112,8 +149,15 @@ function Register() {
             </label>
           </div>
 
-          <button className="bg-blue-600 w-full hover:bg-blue-700 text-white rounded-md px-4 py-2 mb-4">
-            Sign Up
+          <button
+            disabled={loader}
+            className="bg-blue-600 w-full hover:bg-blue-700 text-white rounded-md px-7 py-2 mb-4"
+          >
+            {loader ? (
+              <PropagateLoader color="#ffffff" cssOverride={overRideStyle} />
+            ) : (
+              "Sign Up"
+            )}
           </button>
 
           <div className="flex items-center mb-4 gap-3 justify-center">
