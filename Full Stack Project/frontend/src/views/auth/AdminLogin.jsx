@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLogin, messageClear } from "../../store/Reducers/authReducer";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import NewButton from "../../components/shared/NewButton";
 
 function AdminLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loader, successMessage, errorMessage } = useSelector(
+  const { loader, successMessage, errorMessage, role } = useSelector(
     (state) => state.auth
   );
 
@@ -28,13 +28,15 @@ function AdminLogin() {
     if (successMessage) {
       toast.success(successMessage);
       dispatch(messageClear());
-      navigate("/");
+      navigate("/admin/dashboard");
     }
     if (errorMessage) {
       toast.error(errorMessage);
       dispatch(messageClear());
     }
   }, [successMessage, errorMessage, dispatch, navigate]);
+
+  if (role === "admin") return <Navigate to="/admin/dashboard" replace />;
 
   return (
     <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">

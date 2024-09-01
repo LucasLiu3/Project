@@ -1,5 +1,6 @@
 import { lazy } from "react";
-import Home from "../../views/Home";
+
+const Home = lazy(() => import("../../views/pages/Home"));
 
 const Login = lazy(() => import("../../views/auth/Login"));
 const Register = lazy(() => import("../../views/auth/Register"));

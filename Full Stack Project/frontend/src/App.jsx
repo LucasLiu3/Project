@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Router from "./router/Router";
-import publicRoutes from "./router/routes/publicRoute";
 import { allPrivateRoutes } from "./router/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { get_user_info } from "./store/Reducers/authReducer";
+import publicRoutes from "./router/routes/publicRoute";
 
 export default function App() {
   const [allRoutes, setAllRoutes] = useState([...publicRoutes]);

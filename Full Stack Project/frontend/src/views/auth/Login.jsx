@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sellerLogin, messageClear } from "../../store/Reducers/authReducer";
@@ -14,7 +14,7 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { loader, successMessage, errorMessage } = useSelector(
+  const { loader, successMessage, errorMessage, role } = useSelector(
     (state) => state.auth
   );
 
@@ -34,7 +34,7 @@ function Login() {
     if (successMessage) {
       toast.success(successMessage);
       dispatch(messageClear());
-      navigate("/");
+      navigate("/seller/dashboard");
     }
     if (errorMessage) {
       toast.error(errorMessage);
@@ -49,6 +49,8 @@ function Login() {
     justifyContent: "center",
     alignItems: "center",
   };
+
+  if (role === "seller") return <Navigate to="/seller/dashboard" replace />;
 
   return (
     <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
