@@ -1,12 +1,21 @@
 
+# Agricultural Hiring Management System
 
-Description: Developed a comprehensive agricultural hiring management system using Flask, providing functionalities for various user roles including administrators, customers, staff, and local/national managers. The system facilitates efficient management and hiring processes for agricultural jobs.
-• Technologies Used: Flask (Python)，SQL (for database management)，HTML/CSS (for front-end)，JavaScript (for interactivity)，Git (for version control)
-• Key Features:
-• Implemented secure login and registration functionalities, ensuring data privacy and security for different user roles.
-• Provided an admin dashboard to manage users, jobs, and system settings.
-• Designed a customer interface for browsing and applying for agricultural jobs.
-• Enabled staff to manage their profiles and view assigned tasks.
-• Developed views for local and national managers to oversee hiring processes within their respective regions.
-• Utilized SQL for robust and efficient database management, storing user data, job postings, and application records.
-• Ensured a responsive and user-friendly interface accessible on various devices.
+## Description
+Developed a comprehensive agricultural hiring management system using Flask, designed to support various user roles, including administrators, customers, staff, and local/national managers. The system streamlines the management and hiring processes for agricultural jobs, ensuring efficiency and effectiveness across all levels of operation.
+
+## Technologies Used
+- **Flask (Python)**
+- **SQL** (for database management)
+- **HTML/CSS** (for front-end design)
+- **JavaScript** (for interactivity)
+- **Git** (for version control)
+
+## Key Features
+- **Secure Authentication**: Implemented secure login and registration functionalities, ensuring data privacy and security for all user roles.
+- **Admin Dashboard**: Developed a comprehensive dashboard for administrators to manage users, job postings, and system settings.
+- **Customer Interface**: Designed an intuitive interface for customers to browse and apply for agricultural jobs.
+- **Staff Management**: Enabled staff to manage their profiles and view assigned tasks efficiently.
+- **Managerial Views**: Provided local and national managers with views to oversee and manage hiring processes within their respective regions.
+- **Robust Database Management**: Utilized SQL for efficient storage and management of user data, job postings, and application records.
+- **Responsive Design**: Ensured a user-friendly interface accessible across various devices, enhancing usability and accessibility.
