@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import NewProductForm from "../../components/sellers/NewProductForm";
 import Button from "../../components/shared/Button";
 import NewProductImage from "../../components/sellers/NewProductImage";
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "../../store/Reducers/categoryReducer";
+import {
+  createNewProduct,
+  messageClear,
+} from "../../store/Reducers/productReducer";
+import { PropagateLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 function SellerNewProduct() {
   const [formInfo, setFormInfo] = useState({
@@ -16,56 +24,66 @@ function SellerNewProduct() {
     description: "",
   });
 
-  function handleChange(e) {
-    setFormInfo({
-      ...formInfo,
-      [e.target.name]: e.target.value,
-    });
-  }
+  const dispatch = useDispatch();
+
+  useEffect(
+    function () {
+      dispatch(getCategory());
+    },
+    [dispatch]
+  );
+
+  const { loader, successMessage, errorMessage } = useSelector(
+    (state) => state.product
+  );
+
+  const { category } = useSelector((state) => state.category);
+  const categoryName = category.map((each) => ({ categoryName: each.slug }));
 
   const [images, setImages] = useState([]);
   const [imageShow, setImageShow] = useState([]);
 
-  function imageHandler(e) {
-    console.log(e.target.files);
+  function addNewProduct(e) {
+    e.preventDefault();
 
-    const imageFiles = e.target.files;
-    const length = imageFiles.length;
+    const formDate = new FormData();
+    formDate.append("product", formInfo.product);
+    formDate.append("brand", formInfo.brand);
+    formDate.append("category", formInfo.category);
+    formDate.append("stock", formInfo.stock);
+    formDate.append("price", formInfo.price);
+    formDate.append("discount", formInfo.discount);
+    formDate.append("description", formInfo.description);
+    formDate.append("shopName", "test shop name");
 
-    if (length > 0) {
-      setImages([...images, imageFiles]);
-
-      const imageUrl = [];
-
-      for (let i = 0; i < length; i++) {
-        imageUrl.push({ url: URL.createObjectURL(imageFiles[i]) });
-      }
-
-      setImageShow([...imageShow, ...imageUrl]);
+    for (let i = 0; i < images[0].length; i++) {
+      formDate.append("images", images[0][i]);
     }
+
+    dispatch(createNewProduct(formDate));
   }
 
-  function changeImage(image, index) {
-    console.log(image);
-    if (image) {
-      const tempUrl = imageShow;
-      const tempImage = images;
-
-      tempImage[index] = image;
-      tempUrl[index] = { url: URL.createObjectURL(image) };
-
-      setImages([...tempImage]);
-      setImageShow([...tempUrl]);
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      setFormInfo({
+        product: "",
+        brand: "",
+        category: "",
+        stock: "",
+        price: "",
+        discount: "",
+        description: "",
+      });
+      setImageShow([]);
+      setImages([]);
     }
-  }
-
-  function removeImage(index) {
-    const filterImage = images.filter((each, i) => i !== index);
-    const filterUrl = imageShow.filter((each, i) => i !== index);
-
-    setImages([...filterImage]);
-    setImageShow([...filterUrl]);
-  }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch]);
 
   return (
     <div className="w-full bg-[#6a5fdf] rounded-md p-4">
@@ -83,23 +101,24 @@ function SellerNewProduct() {
       </div>
 
       <div>
-        <form>
+        <form onSubmit={addNewProduct}>
           <NewProductForm
             formInfo={formInfo}
-            handleChange={handleChange}
+            categoryName={categoryName}
+            setFormInfo={setFormInfo}
           ></NewProductForm>
 
           <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4 mt-5">
             <NewProductImage
               imageShow={imageShow}
-              changeImage={changeImage}
-              removeImage={removeImage}
-              imageHandler={imageHandler}
+              setImages={setImages}
+              setImageShow={setImageShow}
+              images={images}
             ></NewProductImage>
           </div>
 
           <div className="mt-5 flex">
-            <Button>Add Product</Button>
+            <Button>{loader ? <PropagateLoader /> : "Add Product"}</Button>
           </div>
         </form>
       </div>

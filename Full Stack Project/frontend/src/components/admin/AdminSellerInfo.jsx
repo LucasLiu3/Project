@@ -1,4 +1,4 @@
-function AdminSellerInfo() {
+function AdminSellerInfo({ seller }) {
   return (
     <>
       <div className="px-0 py-2">
@@ -8,27 +8,27 @@ function AdminSellerInfo() {
       <div className="flex justify-between text-sm flex-col gap-3 p-4 bg-[#9e97e9] rounded-md">
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Name:</span>
-          <span>Place Holder</span>
+          <span>{seller.name}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Email:</span>
-          <span>test@gmail.com</span>
+          <span>{seller.email}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Role:</span>
-          <span>Seller</span>
+          <span>{seller.role}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Shop name:</span>
-          <span>Shop1</span>
+          <span>{seller.shopInfo ? seller.shopInfo.shopName : "-"}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Address:</span>
-          <span>133 street</span>
+          <span>{seller.shopInfo ? seller.shopInfo.address : "-"}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
           <span>Status:</span>
-          <span>Active</span>
+          <span>{seller.status}</span>
         </div>
       </div>
     </>

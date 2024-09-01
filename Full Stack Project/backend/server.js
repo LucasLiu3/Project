@@ -9,10 +9,11 @@ const { dbConnect } = require("./utilities/db");
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const sellerRoutes = require("./routes/sellerRoutes");
 
 const corsOptions = {
-  origin: "http://localhost:3000", // 允许的请求源
-  credentials: true, // 允许携带凭证（如 cookies）
+  origin: "http://localhost:3000",
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/seller", sellerRoutes);
 
 const port = process.env.PORT;
 dbConnect();

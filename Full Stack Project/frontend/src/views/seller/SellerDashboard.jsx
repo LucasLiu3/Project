@@ -22,7 +22,7 @@ function SellerDashboard() {
         </div>
 
         <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
-          <DashboardOrders></DashboardOrders>
+          <DashboardOrders role="seller"></DashboardOrders>
         </div>
       </div>
     </>

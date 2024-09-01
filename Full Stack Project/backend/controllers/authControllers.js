@@ -1,9 +1,19 @@
 const adminModel = require("../models/adminModel");
 const sellerModel = require("../models/sellerModel");
 const sellerToCustomer = require("../models/chat/sellerToCustomerModel");
+
 const { responseReturn } = require("../utilities/response");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../utilities/tokenCreate");
+const formidable = require("formidable");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_KEY,
+  api_secret: process.env.CLOUD_SECRET,
+  secure: true,
+});
 
 class authControllers {
   admin_login = async (req, res) => {
@@ -132,6 +142,66 @@ class authControllers {
       });
     } catch (error) {
       return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  update_profile_image = async (req, res) => {
+    const form = formidable({ multiples: true });
+    const { id } = req;
+
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        responseReturn(res, 404, { error: "Something wrong, try again" });
+      } else {
+        try {
+          const uplodaImage = files.profileImage;
+
+          const result = await cloudinary.uploader.upload(
+            uplodaImage.filepath,
+            {
+              folder: "profile",
+            }
+          );
+
+          if (!result) return;
+
+          const updateImage = await sellerModel.findByIdAndUpdate(
+            id,
+            { image: result.url },
+            { new: true }
+          );
+
+          return responseReturn(res, 201, {
+            message: "Image Updated Successfully",
+            updateInfo: updateImage,
+          });
+        } catch (err) {
+          console.log(err);
+          responseReturn(res, 500, { error: err.message });
+        }
+      }
+    });
+  };
+
+  update_shop_info = async (req, res) => {
+    const { id } = req;
+
+    const shopInfo = req.body;
+
+    try {
+      const updateShop = await sellerModel.findByIdAndUpdate(
+        id,
+        { shopInfo: shopInfo },
+        { new: true }
+      );
+
+      return responseReturn(res, 201, {
+        message: "Shop Info Updated Successfully",
+        updateInfo: updateShop,
+      });
+    } catch (error) {
+      console.log(err);
+      responseReturn(res, 500, { error: err.message });
     }
   };
 }

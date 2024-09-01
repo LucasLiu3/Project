@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import NewProductForm from "../../components/sellers/NewProductForm";
 import Button from "../../components/shared/Button";
 import NewProductImage from "../../components/sellers/NewProductImage";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getOneProduct,
+  messageClear,
+  updateProduct,
+} from "../../store/Reducers/productReducer";
+import toast from "react-hot-toast";
+
 function SellerProductEdit() {
+  const dispatch = useDispatch();
   const [formInfo, setFormInfo] = useState({
     product: "",
     brand: "",
@@ -16,74 +25,74 @@ function SellerProductEdit() {
     description: "",
   });
 
-  function handleChange(e) {
-    setFormInfo({
-      ...formInfo,
-      [e.target.name]: e.target.value,
-    });
-  }
+  const { productId } = useParams();
+  const { category } = useSelector((state) => state.category);
+  const categoryName = category.map((each) => ({ categoryName: each.slug }));
+  const { loader, product, successMessage, errorMessage } = useSelector(
+    (state) => state.product
+  );
 
   const [images, setImages] = useState([]);
   const [imageShow, setImageShow] = useState([]);
+  const [oldImages, setOldImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
 
-  function imageHandler(e) {
-    console.log(e.target.files);
-
-    const imageFiles = e.target.files;
-    const length = imageFiles.length;
-
-    if (length > 0) {
-      setImages([...images, imageFiles]);
-
-      const imageUrl = [];
-
-      for (let i = 0; i < length; i++) {
-        imageUrl.push({ url: URL.createObjectURL(imageFiles[i]) });
-      }
-
-      setImageShow([...imageShow, ...imageUrl]);
+  useEffect(() => {
+    if (!loader && product) {
+      setFormInfo({
+        product: product.product,
+        brand: product.brand,
+        category: product.category,
+        stock: product.stock,
+        price: product.price,
+        discount: product.discount,
+        description: product.description,
+      });
+      setImageShow(product.images);
+      setOldImages(product.images);
     }
-  }
+  }, [loader, product]);
 
-  function changeImage(image, index) {
-    console.log(image);
-    if (image) {
-      const tempUrl = imageShow;
-      const tempImage = images;
+  useEffect(
+    function () {
+      dispatch(getOneProduct(productId));
+    },
+    [dispatch, productId]
+  );
 
-      tempImage[index] = image;
-      tempUrl[index] = { url: URL.createObjectURL(image) };
-
-      setImages([...tempImage]);
-      setImageShow([...tempUrl]);
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
     }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, productId]);
+
+  function updateHandler(e) {
+    e.preventDefault();
+
+    const formData = new FormData();
+
+    // 添加文本字段
+    formData.append("product", formInfo.product);
+    formData.append("brand", formInfo.brand);
+    formData.append("category", formInfo.category);
+    formData.append("stock", formInfo.stock);
+    formData.append("price", formInfo.price);
+    formData.append("discount", formInfo.discount);
+    formData.append("description", formInfo.description);
+    formData.append("productId", productId);
+    formData.append("oldImages", oldImages);
+
+    for (let i = 0; i < newImages[0].length; i++) {
+      formData.append("newImages", newImages[0][i]);
+    }
+
+    dispatch(updateProduct(formData));
   }
-
-  function removeImage(index) {
-    const filterImage = images.filter((each, i) => i !== index);
-    const filterUrl = imageShow.filter((each, i) => i !== index);
-
-    setImages([...filterImage]);
-    setImageShow([...filterUrl]);
-  }
-
-  useEffect(function () {
-    setFormInfo({
-      product: "TestProduct",
-      brand: "Test Brand",
-      category: "bran1",
-      stock: "2",
-      price: "33",
-      discount: "20",
-      description: "Test Description",
-    });
-    setImageShow([
-      {
-        url: "http://localhost:3000/images/admin.jpg",
-      },
-      { url: "http://localhost:3000/images/admin.jpg" },
-    ]);
-  }, []);
 
   return (
     <div className="w-full bg-[#6a5fdf] rounded-md p-4">
@@ -101,23 +110,27 @@ function SellerProductEdit() {
       </div>
 
       <div>
-        <form>
+        <form onSubmit={updateHandler}>
           <NewProductForm
             formInfo={formInfo}
-            handleChange={handleChange}
+            setFormInfo={setFormInfo}
+            categoryName={categoryName}
           ></NewProductForm>
-
           <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4 mt-5">
             <NewProductImage
               imageShow={imageShow}
-              changeImage={changeImage}
-              removeImage={removeImage}
-              imageHandler={imageHandler}
+              setImages={setImages}
+              setImageShow={setImageShow}
+              images={images}
+              newImages={newImages}
+              setNewImages={setNewImages}
+              oldImages={oldImages}
+              setOldImages={setOldImages}
             ></NewProductImage>
           </div>
 
           <div className="mt-5 flex">
-            <Button>Save Changes</Button>
+            <Button>Update</Button>
           </div>
         </form>
       </div>

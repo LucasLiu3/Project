@@ -67,7 +67,11 @@ function AdminOrderPage() {
           </thead>
 
           <tbody>
-            <ContentModule imageDate={fakeContent}></ContentModule>
+            <ContentModule
+              data={fakeContent}
+              content="order"
+              role="admin"
+            ></ContentModule>
           </tbody>
         </table>
       </div>

@@ -57,11 +57,11 @@ const categoryReducer = createSlice({
       .addCase(createNewCategory.fulfilled, (state, action) => {
         state.loader = false;
         state.successMessage = action.payload.message;
+        state.category = [...state.category, action.payload.category];
       })
       .addCase(createNewCategory.rejected, (state, action) => {
         state.loader = false;
         state.errorMessage = action.payload.error;
-        state.category = [...state.category, action.payload.category];
       })
       .addCase(getCategory.pending, (state, action) => {
         state.loader = true;

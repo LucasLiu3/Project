@@ -1,15 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Pagination from "../../components/Pagination";
 import { HeadModule } from "../../components/shared/HeadModule";
 import { ContentModule } from "./../../components/shared/ContentModule";
 import Filter from "../../components/shared/Filter";
+import { useDispatch, useSelector } from "react-redux";
+import { getProducts } from "../../store/Reducers/productReducer";
 
 function SellerAllProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
-
   const [searchContent, setSearchContent] = useState("");
+
+  const dispatch = useDispatch();
+  const { products } = useSelector((state) => state.product);
+
+  const allProducts = products.map((each, index) => ({
+    ...each,
+    number: index,
+  }));
+
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  let selectedProduct = allProducts.slice(startIndex, endIndex);
+  console.log(selectedProduct);
+  if (searchContent) {
+    selectedProduct = selectedProduct.filter(
+      (each) =>
+        each.product.toLowerCase().indexOf(searchContent.toLowerCase()) > -1
+    );
+  }
+
+  useEffect(
+    function () {
+      dispatch(getProducts());
+    },
+    [dispatch]
+  );
 
   const headerTitle = [
     "Product ID",
@@ -19,62 +46,8 @@ function SellerAllProducts() {
     "Brand",
     "Price",
     "Discount",
-
     "Stock",
     "Action",
-  ];
-
-  const fakeContent = [
-    {
-      productId: 1,
-      image: "1.jpg",
-      productName: "Product 1",
-      category: "Shoes",
-      brand: "brand1",
-      price: "333",
-      discount: "20%",
-      stock: "2",
-    },
-    {
-      productId: 1,
-      image: "1.jpg",
-      productName: "Product 1",
-      category: "Shoes",
-      brand: "brand1",
-      price: "333",
-      discount: "20%",
-      stock: "2",
-    },
-    {
-      productId: 1,
-      image: "1.jpg",
-      productName: "Product 1",
-      category: "Shoes",
-      brand: "brand1",
-      price: "333",
-      discount: "20%",
-      stock: "2",
-    },
-    {
-      productId: 1,
-      image: "1.jpg",
-      productName: "Product 1",
-      category: "Shoes",
-      brand: "brand1",
-      price: "333",
-      discount: "20%",
-      stock: "2",
-    },
-    {
-      productId: 1,
-      image: "1.jpg",
-      productName: "Product 1",
-      category: "Shoes",
-      brand: "brand1",
-      price: "333",
-      discount: "20%",
-      stock: "2",
-    },
   ];
 
   return (
@@ -92,7 +65,10 @@ function SellerAllProducts() {
           </thead>
 
           <tbody>
-            <ContentModule imageDate={fakeContent}></ContentModule>
+            <ContentModule
+              data={selectedProduct}
+              content="products"
+            ></ContentModule>
           </tbody>
         </table>
       </div>
@@ -102,7 +78,7 @@ function SellerAllProducts() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           perPage={perPage}
-          totalItem={35}
+          totalItem={searchContent ? selectedProduct.length : products.length}
           showPageNmber={3}
         ></Pagination>
       </div>

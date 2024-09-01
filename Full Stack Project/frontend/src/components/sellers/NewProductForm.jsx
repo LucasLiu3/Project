@@ -1,4 +1,10 @@
-function NewProductForm({ formInfo, handleChange }) {
+function NewProductForm({ formInfo, categoryName, setFormInfo }) {
+  function handleChange(e) {
+    setFormInfo({
+      ...formInfo,
+      [e.target.name]: e.target.value,
+    });
+  }
   return (
     <>
       <div className="flex flex-col mb-3 md:flex-row gap-4 w-full text-[#d0d2d6]">
@@ -37,18 +43,19 @@ function NewProductForm({ formInfo, handleChange }) {
             className="px-4 py-2 mt-2 focus:border-slate-700 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
             name="category"
             id="category"
-            value={formInfo.category}
+            value={formInfo.category ? formInfo.category : ""}
             onChange={handleChange}
           >
             <option value="">--Select Category--</option>
-            <option value="bran1">bran1</option>
-            <option value="bran2">bran2</option>
-            <option value="bran3">bran3</option>
-            <option value="bran4">bran4</option>
+            {categoryName.map((each, index) => (
+              <option value={each.categoryName} key={index}>
+                {each.categoryName}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex flex-col w-full gap-1">
-          <label>Stock Name</label>
+          <label>Stock</label>
           <input
             type="text"
             name="stock"

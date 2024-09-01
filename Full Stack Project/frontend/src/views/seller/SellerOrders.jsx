@@ -68,7 +68,8 @@ function SellerOrders() {
 
           <tbody>
             <ContentModule
-              imageDate={fakeContent}
+              data={fakeContent}
+              content="order"
               role="seller"
             ></ContentModule>
           </tbody>

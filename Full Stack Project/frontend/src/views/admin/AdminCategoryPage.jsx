@@ -30,7 +30,6 @@ function AdminCategoryPage() {
   const endIndex = startIndex + perPage;
   let selectedCategory = categoryContent.slice(startIndex, endIndex);
 
-  console.log(searchContent);
   if (searchContent) {
     selectedCategory = selectedCategory.filter(
       (each) =>
@@ -61,7 +60,10 @@ function AdminCategoryPage() {
             </thead>
 
             <tbody>
-              <ContentModule imageDate={selectedCategory}></ContentModule>
+              <ContentModule
+                data={selectedCategory}
+                content="category"
+              ></ContentModule>
             </tbody>
           </table>
         </div>

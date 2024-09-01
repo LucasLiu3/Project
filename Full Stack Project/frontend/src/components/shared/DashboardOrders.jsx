@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { HeadModule } from "./HeadModule";
 import { ContentModule } from "./ContentModule";
 
-function DashboardOrders() {
+function DashboardOrders({ role }) {
   const headerTitle = [
     "Order Id",
     "Price",
@@ -59,7 +59,11 @@ function DashboardOrders() {
           </thead>
 
           <tbody>
-            <ContentModule imageDate={fakeContent}></ContentModule>
+            <ContentModule
+              data={fakeContent}
+              content="order"
+              role={role}
+            ></ContentModule>
           </tbody>
         </table>
       </div>

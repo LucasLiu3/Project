@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import Pagination from "./../../components/Pagination";
 import Filter from "../../components/shared/Filter";
 import { HeadModule } from "../../components/shared/HeadModule";
 import { ContentModule } from "../../components/shared/ContentModule";
+import { getSellers } from "../../store/Reducers/sellerReducer";
 
 function AdminSellersPage() {
+  const dispatch = useDispatch();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
-
   const [searchContent, setSearchContent] = useState("");
 
   const headerTitle = [
@@ -21,43 +24,30 @@ function AdminSellersPage() {
     "Action",
   ];
 
-  const fakeContent = [
-    {
-      image: "1.jpg",
-      name: "seller1",
-      shopName: "seller1 shop",
-      status: "active",
-      email: "seller1@test.mail",
+  const { loader, sellersInfo } = useSelector((state) => state.seller);
+
+  const sellerContent = sellersInfo.map((each, index) => ({
+    number: index,
+    ...each,
+  }));
+
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+  let selectedSeller = sellerContent.slice(startIndex, endIndex);
+
+  if (searchContent) {
+    selectedSeller = selectedSeller.filter(
+      (each) =>
+        each.name.toLowerCase().indexOf(searchContent.toLowerCase()) > -1
+    );
+  }
+
+  useEffect(
+    function () {
+      dispatch(getSellers());
     },
-    {
-      image: "2.jpg",
-      name: "seller2",
-      shopName: "seller2 shop",
-      status: "active",
-      email: "seller2@test.mail",
-    },
-    {
-      image: "3.jpg",
-      name: "seller3",
-      shopName: "seller3 shop",
-      status: "active",
-      email: "seller3@test.mail",
-    },
-    {
-      image: "4.jpg",
-      name: "seller4",
-      shopName: "seller4 shop",
-      status: "active",
-      email: "seller4@test.mail",
-    },
-    {
-      image: "5.jpg",
-      name: "seller5",
-      shopName: "seller5 shop",
-      status: "active",
-      email: "seller5@test.mail",
-    },
-  ];
+    [dispatch]
+  );
 
   return (
     <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -76,7 +66,10 @@ function AdminSellersPage() {
           </thead>
 
           <tbody>
-            <ContentModule imageDate={fakeContent}></ContentModule>
+            <ContentModule
+              data={selectedSeller}
+              content="sellers"
+            ></ContentModule>
           </tbody>
         </table>
       </div>
@@ -86,7 +79,7 @@ function AdminSellersPage() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           perPage={perPage}
-          totalItem={35}
+          totalItem={sellerContent.length}
           showPageNmber={3}
         ></Pagination>
       </div>

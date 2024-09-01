@@ -14,31 +14,31 @@ function SellerPayments() {
   const fakeContent = [
     {
       requestID: 1,
-      price: "333",
+      amount: "333",
       request_status: "pending",
       date: "25 Dec 2023",
     },
     {
       requestID: 1,
-      price: "333",
+      amount: "333",
       request_status: "pending",
       date: "25 Dec 2023",
     },
     {
       requestID: 1,
-      price: "333",
+      amount: "333",
       request_status: "pending",
       date: "25 Dec 2023",
     },
     {
       requestID: 1,
-      price: "333",
+      amount: "333",
       request_status: "pending",
       date: "25 Dec 2023",
     },
     {
       requestID: 1,
-      price: "333",
+      amount: "333",
       request_status: "pending",
       date: "25 Dec 2023",
     },
@@ -81,7 +81,11 @@ function SellerPayments() {
                 </thead>
 
                 <tbody>
-                  <ContentModule imageDate={fakeContent}></ContentModule>
+                  <ContentModule
+                    data={fakeContent}
+                    content="payment"
+                    role="seller"
+                  ></ContentModule>
                 </tbody>
               </table>
             </div>
@@ -109,7 +113,11 @@ function SellerPayments() {
                 </thead>
 
                 <tbody>
-                  <ContentModule imageDate={fakeContent}></ContentModule>
+                  <ContentModule
+                    data={fakeContent}
+                    content="payment"
+                    role="seller"
+                  ></ContentModule>
                 </tbody>
               </table>
             </div>
