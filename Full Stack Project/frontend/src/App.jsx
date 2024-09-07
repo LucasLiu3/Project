@@ -6,7 +6,7 @@ import { get_user_info } from "./store/Reducers/authReducer";
 import publicRoutes from "./router/routes/publicRoute";
 
 export default function App() {
-  const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
+  const [allRoutes, setAllRoutes] = useState([publicRoutes()]);
 
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
