@@ -3,7 +3,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 function Rating({ rating, shop }) {
   return (
-    <div className={`flex ${shop ? "gap-3" : ""}`}>
+    <div className={`flex ${shop ? "gap-3" : "gap-1"}`}>
       {[1, 2, 3, 4, 5].map((each, index) => {
         return rating >= each ? (
           <span key={index} className="text-[#EDB00E]">

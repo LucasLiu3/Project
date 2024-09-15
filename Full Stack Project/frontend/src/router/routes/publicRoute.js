@@ -4,9 +4,13 @@ import FrontLayout from "../../components/customers/FrontLayout";
 import ShopCart from "../../views/pages/ShopCart";
 import Shipping from "../../views/pages/Shipping";
 import ProductDetail from "../../views/pages/ProductDetail";
+import CustomerLogin from "../../views/pages/CustomerLogin";
+import CustomerRegister from "../../views/pages/CustomerRegister";
+import Category from "../../views/pages/Category";
+import ProductSearch from "../../views/pages/ProductSearch";
 const Home = lazy(() => import("../../views/pages/Home"));
-const Login = lazy(() => import("../../views/auth/Login"));
-const Register = lazy(() => import("../../views/auth/Register"));
+const SellerLogin = lazy(() => import("../../views/auth/SellerLogin"));
+const SellerRegister = lazy(() => import("../../views/auth/SellerRegister"));
 const AdminLogin = lazy(() => import("../../views/auth/AdminLogin"));
 const UnAuthorized = lazy(() => import("../../views/UnAuthorized"));
 const Shop = lazy(() => import("../../views/pages/Shop"));
@@ -18,11 +22,19 @@ const publicRoutesList = [
   },
   {
     path: "/login",
-    element: <Login></Login>,
+    element: <CustomerLogin></CustomerLogin>,
   },
   {
     path: "/register",
-    element: <Register></Register>,
+    element: <CustomerRegister></CustomerRegister>,
+  },
+  {
+    path: "/seller/login",
+    element: <SellerLogin></SellerLogin>,
+  },
+  {
+    path: "/seller/register",
+    element: <SellerRegister></SellerRegister>,
   },
   {
     path: "/admin/login",
@@ -47,6 +59,14 @@ const publicRoutesList = [
   {
     path: "/product/:productId",
     element: <ProductDetail></ProductDetail>,
+  },
+  {
+    path: "/products?",
+    element: <Category></Category>,
+  },
+  {
+    path: "/products/search?",
+    element: <ProductSearch></ProductSearch>,
   },
 ];
 

@@ -5,9 +5,13 @@ import { IoIosArrowDown, IoIosPhonePortrait } from "react-icons/io";
 import { FaHeart, FaList, FaLock, FaUser, FaUserPlus } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
+import HomeSearch from "./HomeSearch";
+import { useDispatch, useSelector } from "react-redux";
 
 function Header() {
-  const user = true;
+  const { category } = useSelector((state) => state.category);
+  const { customerInfo } = useSelector((state) => state.customer);
+  const { cartTotal } = useSelector((state) => state.cart);
 
   const path = [
     { path: "/", name: "Home" },
@@ -15,19 +19,6 @@ function Header() {
     { path: "/blog", name: "Blog" },
     { path: "/about", name: "About" },
     { path: "/contact", name: "Contact" },
-  ];
-
-  const [showCategory, setShowCategory] = useState(true);
-
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedCategory, setSelectedCateogry] = useState("");
-  const fakeCategory = [
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
-    "Category6",
   ];
 
   return (
@@ -51,7 +42,7 @@ function Header() {
             </ul>
 
             <div className="flex justify-right items-center font-semibold">
-              {!user ? (
+              {customerInfo ? (
                 <Link
                   className="flex cursor-pointer justify-center items-center gap-2 text-sm text-black"
                   to="/dashboard"
@@ -59,13 +50,13 @@ function Header() {
                   <span>
                     <FaUser />
                   </span>
-                  <span>Customer Name</span>
+                  <span>{customerInfo.name}</span>
                 </Link>
               ) : (
                 <div className="flex justify-center items-center gap-5">
                   <Link
                     className="flex cursor-pointer justify-center items-center gap-2 text-sm text-black"
-                    to="/customer/login"
+                    to="/login"
                   >
                     <span>
                       <FaLock />
@@ -74,7 +65,7 @@ function Header() {
                   </Link>
                   <Link
                     className="flex cursor-pointer justify-center items-center gap-2 text-sm text-black"
-                    to="/customer/login"
+                    to="/register"
                   >
                     <span>
                       <FaUserPlus />
@@ -121,19 +112,23 @@ function Header() {
                       <span className="text-xl text-red-500">
                         <FaHeart />
                       </span>
-                      <span className="w-[20px] h-[20px] absolute bg-slate-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
+                      <span className="w-[20px] h-[20px] absolute bg-red-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
                         3
                       </span>
                     </div>
                     <div className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-[#e2e2e2]">
-                      <Link to="/shopcart">
+                      <Link to={customerInfo ? "/shopcart" : "/login"}>
                         <span className="text-xl text-red-500">
                           <FaCartShopping />
                         </span>
                       </Link>
-                      <span className="w-[20px] h-[20px] absolute bg-slate-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
-                        3
-                      </span>
+                      {cartTotal === 0 ? (
+                        ""
+                      ) : (
+                        <span className="w-[20px] h-[20px] absolute bg-red-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
+                          {cartTotal}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -142,6 +137,8 @@ function Header() {
           </div>
         </div>
       </div>
+
+      <HomeSearch category={category}></HomeSearch>
     </div>
   );
 }

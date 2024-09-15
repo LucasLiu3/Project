@@ -4,6 +4,8 @@ import { allPrivateRoutes } from "./router/routes";
 import { useDispatch, useSelector } from "react-redux";
 import { get_user_info } from "./store/Reducers/authReducer";
 import publicRoutes from "./router/routes/publicRoute";
+import { getCategory } from "./store/Reducers/categoryReducer";
+import { getProductsAll } from "./store/Reducers/productReducer";
 
 export default function App() {
   const [allRoutes, setAllRoutes] = useState([publicRoutes()]);
@@ -23,6 +25,14 @@ export default function App() {
       dispatch(get_user_info());
     },
     [token, dispatch]
+  );
+
+  useEffect(
+    function () {
+      dispatch(getCategory());
+      dispatch(getProductsAll());
+    },
+    [dispatch]
   );
 
   return <Router allRouters={allRoutes}></Router>;

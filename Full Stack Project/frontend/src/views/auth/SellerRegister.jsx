@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sellerRegister, messageClear } from "../../store/Reducers/authReducer";
@@ -8,7 +7,7 @@ import { PropagateLoader } from "react-spinners";
 
 import toast from "react-hot-toast";
 
-function Register() {
+function SellerRegister() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -60,7 +59,7 @@ function Register() {
   };
 
   return (
-    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
+    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center mt-3">
       <div className="w-[400px] p-6 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl mb-4 font-bold text-gray-800">
           Create Your Account
@@ -164,30 +163,12 @@ function Register() {
             <p className="text-gray-700">
               Already have an account?{" "}
               <Link
-                className="font-bold text-blue-600 hover:underline"
-                to="/login"
+                className="font-bold text-indigo-300 px-2"
+                to="/seller/login"
               >
                 Log in
               </Link>
             </p>
-          </div>
-
-          <div className="w-full flex justify-center items-center mb-4">
-            <div className="w-[45%] bg-gray-300 h-[1px]"></div>
-            <div className="w-[10%] flex justify-center items-center">
-              <span className="px-2 text-gray-600">Or</span>
-            </div>
-            <div className="w-[45%] bg-gray-300 h-[1px]"></div>
-          </div>
-
-          <div className="flex justify-center items-center gap-3">
-            <div className="w-[135px] h-[35px] flex rounded-md bg-red-600 shadow-lg hover:bg-red-700 cursor-pointer justify-center items-center">
-              <FaGoogle className="text-white" />
-            </div>
-
-            <div className="w-[135px] h-[35px] flex rounded-md bg-blue-600 shadow-lg hover:bg-blue-700 cursor-pointer justify-center items-center">
-              <FaFacebook className="text-white" />
-            </div>
           </div>
         </form>
       </div>
@@ -195,4 +176,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default SellerRegister;

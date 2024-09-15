@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useEffect } from "react";
 
 import HomeSearch from "../../components/customers/HomeSearch";
 import HomeSalesBanner from "../../components/customers/HomeSalesBanner";
 import HomeCategoryBanner from "../../components/customers/HomeCategoryBanner";
 import HomeDiscountProduct from "../../components/customers/HomeDiscountProduct";
+
+import { useDispatch, useSelector } from "react-redux";
+import { getCategory } from "../../store/Reducers/categoryReducer";
+import { getProductsAll } from "../../store/Reducers/productReducer";
 
 function Home() {
   // const { role } = useSelector((state) => state.auth);
@@ -11,31 +16,26 @@ function Home() {
   // else if (role === "admin") return <Navigate to="/admin/dashboard" replace />;
   // else return <Navigate to="/login" replace />;
 
-  const [showCategory, setShowCategory] = useState(true);
+  const dispatch = useDispatch();
 
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedCategory, setSelectedCateogry] = useState("");
+  const { category } = useSelector((state) => state.category);
+  const { productsAll } = useSelector((state) => state.product);
 
-  const fakeCategory = [
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
-    "Category6",
-  ];
-
-  const rating = 0.1;
+  useEffect(
+    function () {
+      dispatch(getCategory());
+      dispatch(getProductsAll());
+    },
+    [dispatch]
+  );
 
   return (
     <div className="w-full">
-      <HomeSearch></HomeSearch>
-
       <HomeSalesBanner></HomeSalesBanner>
 
-      <HomeCategoryBanner></HomeCategoryBanner>
+      <HomeCategoryBanner category={category}></HomeCategoryBanner>
 
-      <HomeDiscountProduct></HomeDiscountProduct>
+      <HomeDiscountProduct productsAll={productsAll}></HomeDiscountProduct>
     </div>
   );
 }

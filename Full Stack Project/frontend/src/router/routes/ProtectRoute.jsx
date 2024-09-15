@@ -42,7 +42,7 @@ function ProtectRoute({ route, children }) {
       }
     }
   } else {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/seller/login" replace />;
   }
 
   return null;

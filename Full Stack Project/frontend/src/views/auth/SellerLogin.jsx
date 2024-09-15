@@ -5,12 +5,14 @@ import { sellerLogin, messageClear } from "../../store/Reducers/authReducer";
 import { useNavigate } from "react-router-dom";
 
 import { PropagateLoader } from "react-spinners";
-import { FaGoogle } from "react-icons/fa";
-import { FaFacebook } from "react-icons/fa";
+
+import { FaUser } from "react-icons/fa";
+
+import { ImUserTie } from "react-icons/im";
 
 import toast from "react-hot-toast";
 
-function Login() {
+function SellerLogin() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -53,7 +55,7 @@ function Login() {
   if (role === "seller") return <Navigate to="/seller/dashboard" replace />;
 
   return (
-    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
+    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center mt-3">
       <div className="w-[500px] text-[#1a202c] p-2">
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl mb-3 font-bold text-gray-800">
@@ -114,7 +116,10 @@ function Login() {
             <div className="flex items-center mb-4 gap-3 justify-center">
               <p>
                 Don't have an account?{" "}
-                <Link className="font-bold text-blue-500" to="/register">
+                <Link
+                  className="font-bold text-indigo-300 px-2"
+                  to="/seller/register"
+                >
                   Sign up
                 </Link>
               </p>
@@ -129,21 +134,27 @@ function Login() {
             </div>
 
             <div className="flex justify-center items-center gap-3">
-              <div
-                className="w-[135px] h-[35px] flex rounded-md bg-red-500 shadow-lg
-              hover:shadow-red-500/50 justify-center cursor-pointer items-center
-              overflow-hidden"
-              >
-                <FaGoogle />
-              </div>
+              <Link to="/login">
+                <div
+                  className="w-[135px] h-[35px] flex rounded-md bg-red-500 shadow-lg
+                hover:shadow-red-500/50 justify-center cursor-pointer items-center
+                overflow-hidden"
+                >
+                  <FaUser />
+                  <span className="text-md pl-2">Customer</span>
+                </div>
+              </Link>
 
-              <div
-                className="w-[135px] h-[35px] flex rounded-md bg-blue-500 shadow-lg
-              hover:shadow-blue-500/50 justify-center cursor-pointer items-center
-              overflow-hidden"
-              >
-                <FaFacebook />
-              </div>
+              <Link to="/admin/login">
+                <div
+                  className="w-[135px] h-[35px] flex rounded-md bg-blue-500 shadow-lg
+                hover:shadow-blue-500/50 justify-center cursor-pointer items-center
+                overflow-hidden"
+                >
+                  <ImUserTie />
+                  <span className="text-md pl-2">Admin</span>
+                </div>
+              </Link>
             </div>
           </form>
         </div>
@@ -152,4 +163,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default SellerLogin;

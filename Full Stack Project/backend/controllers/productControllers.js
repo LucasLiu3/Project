@@ -69,8 +69,6 @@ class productControllers {
       if (err) {
         responseReturn(res, 404, { error: "Something wrong, try again" });
       } else {
-        // console.log(fields);
-        console.log(files.images);
         const {
           product,
           brand,
@@ -128,6 +126,17 @@ class productControllers {
       const productInfo = await productModel.find({ sellerId: id });
 
       responseReturn(res, 200, { productInfo: productInfo });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  productsAll_get = async (req, res) => {
+    try {
+      const productInfo = await productModel.find({});
+
+      responseReturn(res, 200, { productsAll: productInfo });
     } catch (error) {
       console.log(error);
       return responseReturn(res, 500, { error: error.message });

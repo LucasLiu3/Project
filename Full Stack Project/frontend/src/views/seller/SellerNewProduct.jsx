@@ -37,6 +37,9 @@ function SellerNewProduct() {
     (state) => state.product
   );
 
+  const { userInfo } = useSelector((state) => state.auth);
+  console.log(userInfo);
+
   const { category } = useSelector((state) => state.category);
   const categoryName = category.map((each) => ({ categoryName: each.slug }));
 
@@ -54,7 +57,7 @@ function SellerNewProduct() {
     formDate.append("price", formInfo.price);
     formDate.append("discount", formInfo.discount);
     formDate.append("description", formInfo.description);
-    formDate.append("shopName", "test shop name");
+    formDate.append("shopName", userInfo.shopInfo.shopName);
 
     for (let i = 0; i < images[0].length; i++) {
       formDate.append("images", images[0][i]);

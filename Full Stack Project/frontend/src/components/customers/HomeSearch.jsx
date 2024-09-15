@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaList } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function HomeSearch() {
+function HomeSearch({ category }) {
+  const navigate = useNavigate();
+
   const [showCategory, setShowCategory] = useState(true);
-
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategory, setSelectedCateogry] = useState("");
 
-  const fakeCategory = [
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
-    "Category6",
-  ];
+  function search() {
+    navigate(
+      `/products/search?productName=${searchValue}&category=${selectedCategory}`
+    );
+    setSearchValue("");
+    setSelectedCateogry("");
+  }
 
   return (
     <div className="w-full">
@@ -41,16 +41,18 @@ function HomeSearch() {
 
               <div
                 className={`${
-                  showCategory ? "h-0" : "h-[300px]"
+                  showCategory ? "h-0" : "h-[400px]"
                 } overflow-hidden translate-all md-lg:relative duration-500 absolute z-[99999] bg-[#dbf3ed] w-full border-x round-sm `}
               >
                 <ul className="py-2 text-slate-600 font-semibold">
-                  {fakeCategory.map((each, index) => (
+                  {category.map((each, index) => (
                     <Link
                       key={index}
-                      className=" flex justify-start items-center gap-2 px-[24px] py-[6px] hover:bg-blue-400 "
+                      className=" flex justify-start items-center gap-2 px-[24px] py-[6px] hover:bg-blue-400"
+                      onClick={() => setShowCategory(true)}
+                      to={`/products?category=${each.slug}`}
                     >
-                      {each}
+                      {each.slug}
                     </Link>
                   ))}
                 </ul>
@@ -66,13 +68,14 @@ function HomeSearch() {
                     <select
                       name=""
                       id=""
+                      value={selectedCategory}
                       className="w-[200px] text-slate-600 font-semibold bg-transparent px-2 h-full outline-0 border-none"
                       onChange={(e) => setSelectedCateogry(e.target.value)}
                     >
                       <option value="">Category</option>
-                      {fakeCategory.map((each, index) => (
-                        <option value={each} key={index}>
-                          {each}
+                      {category.map((each, index) => (
+                        <option value={each.slug} key={index}>
+                          {each.slug}
                         </option>
                       ))}
                     </select>
@@ -85,9 +88,13 @@ function HomeSearch() {
                       id=""
                       placeholder="Product Name"
                       onChange={(e) => setSearchValue(e.target.value)}
+                      value={searchValue}
                       className="w-full relative bg-transparent text-slate-700 outline-0 px-3 h-full"
                     />
-                    <button className="bg-[#059473] right-0 absolute px-8 h-[50px] font-semibold uppercase text-white">
+                    <button
+                      className="bg-[#059473] right-0 absolute px-8 h-[50px] font-semibold uppercase text-white"
+                      onClick={search}
+                    >
                       Search
                     </button>
                   </div>

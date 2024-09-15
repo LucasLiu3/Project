@@ -39,7 +39,7 @@ function AdminLogin() {
   if (role === "admin") return <Navigate to="/admin/dashboard" replace />;
 
   return (
-    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center">
+    <div className="min-w-screen min-h-screen bg-blue-50 flex justify-center items-center mt-3">
       <div className="w-[400px] p-4">
         <div className="bg-white p-6 rounded-lg shadow-lg">
           <div className="h-[70px] flex items-center justify-center mb-6">

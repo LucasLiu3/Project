@@ -141,7 +141,7 @@ function Shipping() {
                       </h2>
                       <div className="w-[200px] h-[3px] bg-black mt-1"></div>
                     </div>
-                    <div className="w-full flex flex-wrap">
+                    <div className="w-full flex">
                       <div className="flex sm:w-full gap-2 w-7/12">
                         <div className="flex gap-2 justify-start items-center">
                           <img
@@ -195,8 +195,7 @@ function Shipping() {
                   </div>
                   <button
                     disabled={showInput ? true : false}
-                    className={`p-4 bg-red-${
-                      showInput ? "300" : "500"
+                    className={`p-4 ${showInput ? "bg-red-300" : "bg-red-500"} 
                     } text-white rounded-sm hover:shadow-red-500/50 hover:shadow-md mb-3`}
                   >
                     Place Order

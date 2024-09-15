@@ -2,8 +2,8 @@ const { Schema, model } = require("mongoose");
 
 const sellerToCustomerSchema = new Schema(
   {
-    sellerId: { type: String, required: true },
-    customerId: { type: Array, default: [] },
+    myId: { type: String, required: true },
+    othersId: { type: Array, default: [] },
   },
   { timestamps: true }
 );

@@ -23,7 +23,20 @@ export const getProducts = createAsyncThunk(
       const { data } = await api.get("/product/products-get", {
         withCredentials: true,
       });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
+export const getProductsAll = createAsyncThunk(
+  "product/getProductsAll",
+  async (_, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.get("/product/productsAll-get", {
+        withCredentials: true,
+      });
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -65,37 +78,6 @@ export const updateOneProduct = createAsyncThunk(
   }
 );
 
-// export const updateProductImage = createAsyncThunk(
-//   "product/updateProductImage",
-//   async (
-//     { oldImages, newImages, productId },
-//     { rejectWithValue, fulfillWithValue }
-//   ) => {
-//     const formDate = new FormData();
-
-//     for (let i = 0; i < newImages[0].length; i++) {
-//       formDate.append("newImages", newImages[0][i]);
-//     }
-
-//     formDate.append("oldImages", oldImages);
-//     formDate.append("productId", productId);
-
-//     try {
-//       const { data } = await api.post(
-//         `/product/products-image-update`,
-//         formDate,
-//         {
-//           withCredentials: true,
-//         }
-//       );
-
-//       return data;
-//     } catch (error) {
-//       return rejectWithValue(error.response.data);
-//     }
-//   }
-// );
-
 export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async (formData, { rejectWithValue, fulfillWithValue }) => {
@@ -122,6 +104,7 @@ const productReducer = createSlice({
     successMessage: "",
     errorMessage: "",
     loader: false,
+    productsAll: [],
   },
   reducers: {
     messageClear: (state) => {
@@ -173,6 +156,18 @@ const productReducer = createSlice({
         state.successMessage = action.payload.message;
       })
       .addCase(updateProduct.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
+      })
+      .addCase(getProductsAll.pending, (state, action) => {
+        state.loader = true;
+      })
+      .addCase(getProductsAll.fulfilled, (state, action) => {
+        state.loader = false;
+        state.productsAll = action.payload.productsAll;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(getProductsAll.rejected, (state, action) => {
         state.loader = false;
         state.errorMessage = action.payload.error;
       });

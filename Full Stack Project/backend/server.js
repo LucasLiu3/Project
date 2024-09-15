@@ -10,7 +10,8 @@ const { dbConnect } = require("./utilities/db");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
-
+const customerRoutes = require("./routes/customerRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
@@ -24,6 +25,8 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/seller", sellerRoutes);
+app.use("/api/customer", customerRoutes);
+app.use("/api/cart", cartRoutes);
 
 const port = process.env.PORT;
 dbConnect();

@@ -90,7 +90,7 @@ class authControllers {
       });
 
       await sellerToCustomer.create({
-        sellerId: newSeller.id,
+        myId: newSeller.id,
       });
 
       const token = await createToken({

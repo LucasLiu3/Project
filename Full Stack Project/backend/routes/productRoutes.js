@@ -4,7 +4,9 @@ const { authMiddleware } = require("../middlewares/authMiddleware");
 const router = require("express").Router();
 
 router.post("/category-add", authMiddleware, productControllers.category_add);
-router.get("/category-get", authMiddleware, productControllers.category_get);
+router.get("/category-get", productControllers.category_get);
+
+router.get("/productsAll-get", productControllers.productsAll_get);
 
 router.post("/products-add", authMiddleware, productControllers.product_add);
 

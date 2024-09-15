@@ -2,15 +2,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from "react-router-dom";
 
-function HomeCategoryBanner() {
-  const fakeCategory = [
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
-    "Category6",
-  ];
+function HomeCategoryBanner({ category }) {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -57,17 +49,17 @@ function HomeCategoryBanner() {
         responsive={responsive}
         transitionDuration={1000}
       >
-        {fakeCategory.map((c, i) => (
-          <Link className="h-[185px] border block" key={i} to="#">
+        {category.map((each, i) => (
+          <Link
+            className="h-[185px] border block"
+            key={i}
+            to={`/products?category=${each.slug}`}
+          >
             <div className="w-full h-full relative p-3">
-              <img
-                src={`images1/products/${i + 1}.webp`}
-                alt=""
-                className="h-full w-full"
-              />
+              <img src={each.image} alt="" className="h-full w-full" />
               <div className="absolute bottom-6 w-full mx-auto font-bold left-0 flex justify-center items-center">
                 <span className="py-[2px] px-6 bg-[#3330305d] text-white">
-                  {c}
+                  {each.slug}
                 </span>
               </div>
             </div>
