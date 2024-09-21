@@ -11,12 +11,8 @@ export const adminLogin = createAsyncThunk(
       });
       localStorage.setItem("accessToken", data.token);
 
-      // console.log(data);
-      // console.log("正确的数据返回");
       return data;
     } catch (error) {
-      // console.log(error.response.data);
-      // console.log("错误的数据返回");
       return rejectWithValue(error.response.data);
     }
   }
@@ -31,12 +27,8 @@ export const sellerRegister = createAsyncThunk(
       });
       localStorage.setItem("accessToken", data.token);
 
-      // console.log(data);
-      // console.log("正确的数据返回");
       return data;
     } catch (error) {
-      // console.log(error.response.data);
-      // console.log("错误的数据返回");
       return rejectWithValue(error.response.data);
     }
   }

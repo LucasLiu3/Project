@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -9,16 +9,17 @@ import Rating from "./../../components/customers/Rating";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { FaHeart } from "react-icons/fa";
 import Reviews from "../../components/customers/Reviews";
+import { useDispatch, useSelector } from "react-redux";
+import { get_product_detail } from "../../store/Reducers/CustomerDashboardReducer";
+import toast from "react-hot-toast";
+
+import {
+  addToCart,
+  addToWishList,
+  messageClear,
+} from "../../store/Reducers/cartReducer";
 
 function ProductDetail() {
-  const fakeCategory = [
-    "Category1",
-    "Category2",
-    "Category3",
-    "Category4",
-    "Category5",
-    "Category6",
-  ];
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -50,12 +51,103 @@ function ProductDetail() {
     },
   };
 
-  const [selectedImg, setSelectedImg] = useState(1);
-
-  const discount = 20;
-  const stock = 2;
+  const [selectedImg, setSelectedImg] = useState("");
 
   const [side, setSide] = useState(true);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { productId } = useParams();
+
+  const { productDetail } = useSelector((state) => state.customerDashboard);
+
+  const [quantity, setQuantity] = useState(1);
+
+  const { successMessage, errorMessage } = useSelector((state) => state.cart);
+  const { customerInfo } = useSelector((state) => state.customer);
+
+  useEffect(
+    function () {
+      dispatch(get_product_detail(productId));
+    },
+    [productId, dispatch]
+  );
+
+  function addQuantity() {
+    if (quantity >= productDetail.stock) return toast.error("Out of Stock");
+
+    setQuantity((quantity) => quantity + 1);
+  }
+
+  function minusQuantity() {
+    if (quantity === 1) return toast.error("Quantity can not be 0");
+
+    setQuantity((quantity) => quantity - 1);
+  }
+
+  function add_to_cart(productId) {
+    if (customerInfo) {
+      dispatch(
+        addToCart({
+          customerId: customerInfo.id,
+          quantity: quantity,
+          productId: productId,
+        })
+      );
+    } else {
+      toast.error("Plase Log in first");
+    }
+  }
+
+  function add_to_wishList(productId) {
+    if (customerInfo) {
+      dispatch(
+        addToWishList({
+          customerId: customerInfo.id,
+          productId: productId,
+        })
+      );
+    } else {
+      toast.error("Plase Log in first");
+    }
+  }
+
+  const buyNowProduct = [
+    [
+      productDetail.shopName,
+      [
+        {
+          productsInCart: [{ ...productDetail, quantity: quantity }],
+          quantity: quantity,
+        },
+      ],
+    ],
+  ];
+
+  function buyNow() {
+    navigate("/shipping", {
+      state: {
+        products: buyNowProduct,
+        price:
+          productDetail.price * (1 - productDetail.discount / 100) * quantity,
+        shippingFee: buyNowProduct.length * 20,
+        items: quantity,
+      },
+    });
+  }
+
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, customerInfo]);
+
+  if (!productDetail) return <p>Loading....</p>;
 
   return (
     <div>
@@ -69,11 +161,15 @@ function ProductDetail() {
               <span>
                 <MdKeyboardArrowRight />
               </span>
-              <Link>Category</Link>
+              <Link
+                to={`http://localhost:3000/products?category=${productDetail.category}`}
+              >
+                {productDetail.category}
+              </Link>
               <span>
                 <MdKeyboardArrowRight />
               </span>
-              <span>Product Name Holder</span>
+              <span>{productDetail.slug}</span>
             </div>
           </div>
         </div>
@@ -86,24 +182,24 @@ function ProductDetail() {
               <div className="p-5 border">
                 <img
                   className="h-[400px] w-full"
-                  src={`/images1/products/${selectedImg}.webp`}
+                  src={selectedImg || productDetail.images?.[0]}
                   alt=""
                 />
               </div>
               <div className="py-3">
-                {fakeCategory && (
+                {productDetail.images && (
                   <Carousel
                     autoPlay={true}
                     infinite={true}
                     responsive={responsive}
                     transitionDuration={500}
                   >
-                    {fakeCategory.map((img, i) => {
+                    {productDetail.images?.map((img, i) => {
                       return (
-                        <div onClick={() => setSelectedImg(i + 1)} key={i}>
+                        <div onClick={() => setSelectedImg(img)} key={i}>
                           <img
                             className="h-[120px] cursor-pointer"
-                            src={`/images1/products/${i + 1}.webp`}
+                            src={img}
                             alt=""
                           />
                         </div>
@@ -116,58 +212,74 @@ function ProductDetail() {
 
             <div className="flex flex-col gap-5 ">
               <div className="text-3xl text-slate-600 font-bold">
-                <h3>Product Name Holder</h3>
+                <h3>{productDetail.product}</h3>
               </div>
               <div className="flex justify-start items-center gap-5">
-                <Rating rating={4}></Rating>
-                {stock > 0 ? (
+                <Rating rating={productDetail.rating}></Rating>
+                {productDetail.stock > 0 ? (
                   <span className="text-green-500 text-lg">
-                    {stock > 1
-                      ? `${stock} items in stock`
-                      : `${stock} item in stock`}
+                    {productDetail.stock > 1
+                      ? `${productDetail.stock} items in stock`
+                      : `${productDetail.stock} item in stock`}
                   </span>
                 ) : (
                   <span className="text-red-500 text-lg">Out of Stock</span>
                 )}
               </div>
               <div className="text-xl font-bold flex gap-3">
-                {discount !== 0 ? (
+                {productDetail.discount !== 0 ? (
                   <>
-                    <span className="line-through">$300</span>
+                    <span className="text-xl">Price:</span>
+                    <span className="line-through">${productDetail.price}</span>
                     <span className=" text-red-500">
-                      ${300 - Math.floor((300 * discount) / 100)}
+                      $
+                      {(
+                        productDetail.price *
+                        (1 - productDetail.discount / 100)
+                      ).toFixed(2)}
                     </span>
-                    <span className=" text-red-500">(-{discount}%)</span>
+                    <span className=" text-red-500">
+                      (-{productDetail.discount}%)
+                    </span>
                   </>
                 ) : (
-                  <span>Orginal Price</span>
+                  <>
+                    <span className="text-xl">Price:</span>
+                    <span>${productDetail.price}</span>
+                  </>
                 )}
               </div>
 
-              <div className="text-slate-600 ">
-                <p>
-                  Crafted from high-quality, BPA-free stainless steel, this
-                  bottle is designed to keep your drinks cold for up to 24 hours
-                  and hot for up to 12 hours. Its sleek, durable design makes it
-                  ideal for outdoor adventures, gym workouts, or office use. The
-                  leak-proof, easy-to-carry cap ensures no spills, while the
-                  wide mouth allows for easy filling and cleaning. Available in
-                  a variety of stylish colors, the EcoLite Water Bottle combines
-                  practicality with eco-friendly materials, helping you stay
-                  hydrated while reducing plastic waste.
-                </p>
+              <p>{productDetail.description}</p>
+              <div className="text-slate-600 text-lg flex flex-col gap-3 font-semibold">
+                <p>Category: {productDetail.category}</p>
+                <p>Brand: {productDetail.brand}</p>
+                <p>Shop Name: {productDetail.shopName}</p>
               </div>
 
               <div className="flex gap-3 pb-10 borard-b">
-                {stock > 1 ? (
+                {productDetail.stock > 1 ? (
                   <>
                     <div className="flex bg-slate-200 h-[40px] justify-center items-center text-xl">
-                      <div className="px-6 cursor-pointer">-</div>
-                      <div className="px-6 cursor-pointer">2</div>
-                      <div className="px-6 cursor-pointer">+</div>
+                      <div
+                        className="px-6 cursor-pointer"
+                        onClick={minusQuantity}
+                      >
+                        -
+                      </div>
+                      <div className="px-6 cursor-pointer">{quantity}</div>
+                      <div
+                        className="px-6 cursor-pointer"
+                        onClick={addQuantity}
+                      >
+                        +
+                      </div>
                     </div>
 
-                    <div className="px-4 py-2 h-[40px] cursor-pointer bg-[#059473] text-white">
+                    <div
+                      onClick={() => add_to_cart(productDetail._id)}
+                      className="px-4 py-2 h-[40px] cursor-pointer bg-[#059473] text-white"
+                    >
                       <button>Add to Cart</button>
                     </div>
                   </>
@@ -176,15 +288,21 @@ function ProductDetail() {
                 )}
                 <div>
                   {" "}
-                  <div className="h-[40] w-[40px] flex justify-center items-center cursor-pointer hover:shadow-md bg-red-500 py-3 px-2 text-white">
+                  <div
+                    onClick={() => add_to_wishList(productDetail._id)}
+                    className="h-[40] w-[40px] flex justify-center items-center cursor-pointer hover:shadow-md bg-red-500 py-3 px-2 text-white"
+                  >
                     <FaHeart></FaHeart>
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-3">
-                {stock ? (
-                  <button className="px-8 py-3 h-[50px] cursor-pointer hover:shadow-lg hover:shadow-green-500/40 bg-[#247462] text-white">
+                {productDetail.stock ? (
+                  <button
+                    onClick={buyNow}
+                    className="px-8 py-3 h-[50px] cursor-pointer hover:shadow-lg hover:shadow-green-500/40 bg-[#247462] text-white"
+                  >
                     Buy Now
                   </button>
                 ) : (
@@ -231,17 +349,7 @@ function ProductDetail() {
                     <Reviews></Reviews>
                   ) : (
                     <p className="py-5 text-slate-500">
-                      {" "}
-                      Crafted from high-quality, BPA-free stainless steel, this
-                      bottle is designed to keep your drinks cold for up to 24
-                      hours and hot for up to 12 hours. Its sleek, durable
-                      design makes it ideal for outdoor adventures, gym
-                      workouts, or office use. The leak-proof, easy-to-carry cap
-                      ensures no spills, while the wide mouth allows for easy
-                      filling and cleaning. Available in a variety of stylish
-                      colors, the EcoLite Water Bottle combines practicality
-                      with eco-friendly materials, helping you stay hydrated
-                      while reducing plastic waste.
+                      {productDetail.description}
                     </p>
                   )}
                 </div>

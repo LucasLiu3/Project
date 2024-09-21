@@ -4,9 +4,9 @@ import Rating from "../../components/customers/Rating";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { addToCart } from "../../store/Reducers/cartReducer";
+import { addToCart, addToWishList } from "../../store/Reducers/cartReducer";
 
-function ProductCard({ i, rating, product }) {
+function ProductCard({ rating, product }) {
   const dispatch = useDispatch();
 
   const { customerInfo } = useSelector((state) => state.customer);
@@ -17,6 +17,20 @@ function ProductCard({ i, rating, product }) {
         addToCart({
           customerId: customerInfo.id,
           quantity: 1,
+          productId: productId,
+        })
+      );
+    } else {
+      toast.error("Plase Log in first");
+    }
+  }
+
+  function add_to_wishList(productId) {
+    console.log(productId);
+    if (customerInfo) {
+      dispatch(
+        addToWishList({
+          customerId: customerInfo.id,
           productId: productId,
         })
       );
@@ -36,7 +50,7 @@ function ProductCard({ i, rating, product }) {
           ""
         )}
         <img
-          src={product.images[0]}
+          src={product.images?.[0] || product.image}
           alt=""
           className="h-[240px] w-full rounded-md"
         />
@@ -45,6 +59,7 @@ function ProductCard({ i, rating, product }) {
           <li
             className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
                   hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
+            onClick={() => add_to_wishList(product._id)}
           >
             <FaRegHeart></FaRegHeart>
           </li>
@@ -52,7 +67,7 @@ function ProductCard({ i, rating, product }) {
             className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
                   hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
           >
-            <Link to={`product/${product._id}`}>
+            <Link to={`http://localhost:3000/product/${product._id}`}>
               <FaEye></FaEye>
             </Link>
           </li>

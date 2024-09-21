@@ -12,6 +12,8 @@ const productRoutes = require("./routes/productRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const orderRoutes = require("./routes/orderRoutes");
+
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true,
@@ -27,6 +29,7 @@ app.use("/api/product", productRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/order", orderRoutes);
 
 const port = process.env.PORT;
 dbConnect();

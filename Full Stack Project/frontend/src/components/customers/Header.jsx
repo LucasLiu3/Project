@@ -4,14 +4,33 @@ import { MdEmail } from "react-icons/md";
 import { IoIosArrowDown, IoIosPhonePortrait } from "react-icons/io";
 import { FaHeart, FaList, FaLock, FaUser, FaUserPlus } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HomeSearch from "./HomeSearch";
 import { useDispatch, useSelector } from "react-redux";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { getCartProduct, getWishList } from "../../store/Reducers/cartReducer";
 
 function Header() {
+  const dispatch = useDispatch();
   const { category } = useSelector((state) => state.category);
   const { customerInfo } = useSelector((state) => state.customer);
-  const { cartTotal } = useSelector((state) => state.cart);
+  const { cartTotal, wishListTotal } = useSelector((state) => state.cart);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(
+    function () {
+      if (!customerInfo) return;
+
+      dispatch(getCartProduct(customerInfo.id));
+      dispatch(getWishList(customerInfo.id));
+    },
+    [customerInfo, dispatch]
+  );
+
+  function toggleOpen() {
+    setIsOpen(!isOpen);
+  }
 
   const path = [
     { path: "/", name: "Home" },
@@ -41,17 +60,39 @@ function Header() {
               </li>
             </ul>
 
-            <div className="flex justify-right items-center font-semibold">
+            <div className="flex justify-right items-center font-semibold relative">
               {customerInfo ? (
-                <Link
-                  className="flex cursor-pointer justify-center items-center gap-2 text-sm text-black"
-                  to="/dashboard"
-                >
-                  <span>
-                    <FaUser />
-                  </span>
-                  <span>{customerInfo.name}</span>
-                </Link>
+                <>
+                  <div
+                    className="flex cursor-pointer justify-center items-center gap-2 text-sm text-black"
+                    onClick={toggleOpen}
+                  >
+                    <span>
+                      <FaUser />
+                    </span>
+                    <span>{customerInfo.name}</span>
+                    <MdKeyboardArrowDown />
+                  </div>
+                  {isOpen && (
+                    <div className="absolute top-full mt-2 right-0 bg-white shadow-lg rounded-md z-50 w-40">
+                      <ul className="flex flex-col text-sm text-black">
+                        <Link
+                          className="p-2 hover:bg-gray-200 cursor-pointer"
+                          to="/customerDashboard"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Profile
+                        </Link>
+                        <Link
+                          className="p-2 hover:bg-gray-200 cursor-pointer"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          Log out
+                        </Link>
+                      </ul>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="flex justify-center items-center gap-5">
                   <Link
@@ -109,12 +150,24 @@ function Header() {
                 <div className="flex md-lg:hidden justify-end  items-center gap-5 ">
                   <div className="flex justify-end gap-5">
                     <div className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-[#e2e2e2]">
-                      <span className="text-xl text-red-500">
-                        <FaHeart />
-                      </span>
-                      <span className="w-[20px] h-[20px] absolute bg-red-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
-                        3
-                      </span>
+                      <Link
+                        to={
+                          customerInfo
+                            ? "/customerDashboard/wishlist"
+                            : "/login"
+                        }
+                      >
+                        <span className="text-xl text-red-500">
+                          <FaHeart />
+                        </span>
+                      </Link>
+                      {wishListTotal === 0 ? (
+                        ""
+                      ) : (
+                        <span className="w-[20px] h-[20px] absolute bg-red-500 rounded-full text-white flex justify-center items-center -top-[3px] -right-[8px] ">
+                          {wishListTotal}
+                        </span>
+                      )}
                     </div>
                     <div className="relative flex justify-center items-center cursor-pointer w-[40px] h-[40px] rounded-full bg-[#e2e2e2]">
                       <Link to={customerInfo ? "/shopcart" : "/login"}>

@@ -8,6 +8,16 @@ import CustomerLogin from "../../views/pages/CustomerLogin";
 import CustomerRegister from "../../views/pages/CustomerRegister";
 import Category from "../../views/pages/Category";
 import ProductSearch from "../../views/pages/ProductSearch";
+import Payment from "../../views/pages/Payment";
+import CustomerDashboard from "../../views/pages/CustomerDashboard";
+import ProtectCustomer from "./ProtectCustomer";
+import Index from "../../components/customers/dashboard/Index";
+import MyOrders from "../../components/customers/dashboard/MyOrders";
+import ChangePassword from "../../components/customers/dashboard/ChangePassword";
+import WishList from "../../components/customers/dashboard/WishList";
+import StripePage from "../../views/pages/StripePage";
+import OrderDetail from "./../../components/customers/dashboard/OrderDetail";
+
 const Home = lazy(() => import("../../views/pages/Home"));
 const SellerLogin = lazy(() => import("../../views/auth/SellerLogin"));
 const SellerRegister = lazy(() => import("../../views/auth/SellerRegister"));
@@ -67,6 +77,36 @@ const publicRoutesList = [
   {
     path: "/products/search?",
     element: <ProductSearch></ProductSearch>,
+  },
+  {
+    path: "/payment",
+    element: <Payment></Payment>,
+  },
+  {
+    path: "/customerDashboard",
+    element: (
+      <ProtectCustomer>
+        <CustomerDashboard></CustomerDashboard>
+      </ProtectCustomer>
+    ),
+    children: [
+      { path: "", element: <Index /> },
+      { path: "myOrders", element: <MyOrders /> },
+      { path: "change-password", element: <ChangePassword /> },
+      { path: "wishlist", element: <WishList /> },
+      {
+        path: "/customerDashboard/myOrders/details/:orderId",
+        element: <OrderDetail />,
+      },
+      // { path: "chat", element: <Chat /> },
+      // // { path: "logout", element: <Logout /> },
+    ],
+  },
+
+  //test
+  {
+    path: "/paymentSuccess/:orderId",
+    element: <StripePage></StripePage>,
   },
 ];
 

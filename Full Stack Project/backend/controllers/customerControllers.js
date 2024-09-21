@@ -1,17 +1,13 @@
+const customerOrder = require("../models/customerOrder");
 const customerModel = require("../models/customerModel");
+const productModel = require("../models/productModel");
 const SellerToCustomerModel = require("../models/chat/sellerToCustomerModel");
 const { responseReturn } = require("../utilities/response");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../utilities/tokenCreate");
-const formidable = require("formidable");
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_KEY,
-  api_secret: process.env.CLOUD_SECRET,
-  secure: true,
-});
+const {
+  mongo: { ObjectId },
+} = require("mongoose");
 
 class customerControllers {
   customer_register = async (req, res) => {
@@ -88,6 +84,48 @@ class customerControllers {
       return responseReturn(res, 200, {
         message: "Login successful",
         token,
+      });
+    } catch (error) {
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_my_orders = async (req, res) => {
+    const { customerId } = req.params;
+
+    try {
+      const my_orders = await customerOrder.find({
+        customerId: new ObjectId(customerId),
+      });
+
+      return responseReturn(res, 200, {
+        my_orders: my_orders,
+      });
+    } catch (error) {
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_order_detail = async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+      const orderDetail = await customerOrder.findById(new ObjectId(orderId));
+      return responseReturn(res, 200, {
+        orderDetail: orderDetail,
+      });
+    } catch (error) {
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_product_detail = async (req, res) => {
+    const { productId } = req.params;
+
+    try {
+      const productDetail = await productModel.findById(productId);
+      return responseReturn(res, 200, {
+        productDetail: productDetail,
       });
     } catch (error) {
       return responseReturn(res, 500, { error: error.message });

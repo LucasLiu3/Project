@@ -5,6 +5,8 @@ import profileReducer from "./Reducers/profileReducer";
 import sellerReducer from "./Reducers/sellerReducer";
 import customerReducer from "./Reducers/customerReducer";
 import cartReducer from "./Reducers/cartReducer";
+import orderReducer from "./Reducers/orderReducer";
+import CustomerDashboardReducer from "./Reducers/CustomerDashboardReducer";
 
 const rootReducer = {
   auth: authReducer,
@@ -14,6 +16,8 @@ const rootReducer = {
   seller: sellerReducer,
   customer: customerReducer,
   cart: cartReducer,
+  order: orderReducer,
+  customerDashboard: CustomerDashboardReducer,
 };
 
 export default rootReducer;

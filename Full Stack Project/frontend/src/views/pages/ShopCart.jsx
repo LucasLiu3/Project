@@ -2,7 +2,14 @@ import { Link, useNavigate } from "react-router-dom";
 import PageTopBackImg from "../../components/customers/PageTopBackImg";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { getCartProduct } from "../../store/Reducers/cartReducer";
+import {
+  deleteCartProduct,
+  getCartProduct,
+  messageClear,
+  quantity_add,
+  quantity_minus,
+} from "../../store/Reducers/cartReducer";
+import toast from "react-hot-toast";
 
 function ShopCart() {
   const navigate = useNavigate();
@@ -10,7 +17,9 @@ function ShopCart() {
   const dispatch = useDispatch();
 
   const { customerInfo } = useSelector((state) => state.customer);
-  const { cart } = useSelector((state) => state.cart);
+  const { cart, successMessage, errorMessage } = useSelector(
+    (state) => state.cart
+  );
 
   const uniqueSellerId = [
     ...new Set(cart.map((each) => each.productsInCart[0].sellerId)),
@@ -31,6 +40,7 @@ function ShopCart() {
     productsForCaltulate.push(products);
   });
 
+  console.log(productsIncart);
   const totalQuantity = productsForCaltulate.reduce((total, group) => {
     return (
       total +
@@ -43,6 +53,24 @@ function ShopCart() {
     );
   }, 0);
 
+  let subtotal = 0;
+
+  const totalPrice = productsForCaltulate.reduce((total, group) => {
+    return (
+      total +
+      group.reduce((groupTotal, item) => {
+        const { quantity } = item;
+
+        const { price, discount } = item.productsInCart[0];
+
+        if (discount === 0) subtotal = quantity * price;
+        else subtotal = (price - (price * discount) / 100) * quantity;
+
+        return groupTotal + subtotal;
+      }, 0)
+    );
+  }, 0);
+
   useEffect(
     function () {
       dispatch(getCartProduct(customerInfo.id));
@@ -50,15 +78,49 @@ function ShopCart() {
     [customerInfo, dispatch]
   );
 
+  useEffect(() => {
+    if (successMessage) {
+      toast.success(successMessage);
+      dispatch(messageClear());
+      dispatch(getCartProduct(customerInfo.id));
+    }
+    if (errorMessage) {
+      toast.error(errorMessage);
+      dispatch(messageClear());
+    }
+  }, [successMessage, errorMessage, dispatch, customerInfo]);
+
+  function addQuantity(quantity, stock, cartId) {
+    if (quantity + 1 > stock) return;
+
+    dispatch(quantity_add(cartId));
+  }
+
+  function minusQuantity(quantity, cartId) {
+    if (quantity === 1) return;
+
+    dispatch(quantity_minus(cartId));
+  }
+
   function redirect() {
-    navigate("/shipping", {
-      state: {
-        products: [],
-        price: 500,
-        shippingFee: 40,
-        items: 2,
-      },
+    const productsWithZeroStock = cart.filter((group) => {
+      return group.productsInCart.some((product) => product.stock === 0);
     });
+
+    if (productsWithZeroStock.length)
+      toast.error(
+        "Some products are out of stock, Please check you shopping cart"
+      );
+    else {
+      navigate("/shipping", {
+        state: {
+          products: productsIncart,
+          price: totalPrice,
+          shippingFee: productsIncart.length * 20,
+          items: totalQuantity,
+        },
+      });
+    }
   }
 
   return (
@@ -74,7 +136,7 @@ function ShopCart() {
                   <div className="flex flex-col gap-3">
                     <div className="bg-white p-4 ">
                       <h2 className="text-2xl font-bold">
-                        Shop Cart ({totalQuantity})
+                        Shop Cart ({cart.length})
                       </h2>
                     </div>
 
@@ -127,7 +189,7 @@ function ShopCart() {
                                     className={
                                       product.productsInCart[0].discount
                                         ? `line-through`
-                                        : ""
+                                        : "text-lg"
                                     }
                                   >
                                     ${product.productsInCart[0].price}
@@ -155,14 +217,42 @@ function ShopCart() {
 
                                 <div className="flex gap-2 flex-col">
                                   <div className="flex bg-slate-200 h-[30px] justify-center items-center text-xl">
-                                    <div className="px-3 cursor-pointer">-</div>
+                                    <div
+                                      className="px-3 cursor-pointer"
+                                      onClick={() =>
+                                        minusQuantity(
+                                          product.quantity,
+                                          product.cartId
+                                        )
+                                      }
+                                    >
+                                      -
+                                    </div>
                                     <div className="px-3">
                                       {product.quantity}
                                     </div>
-                                    <div className="px-3 cursor-pointer">+</div>
+                                    <div
+                                      className="px-3 cursor-pointer"
+                                      onClick={() =>
+                                        addQuantity(
+                                          product.quantity,
+                                          product.productsInCart[0].stock,
+                                          product.cartId
+                                        )
+                                      }
+                                    >
+                                      +
+                                    </div>
                                   </div>
-                                  <button className="px-5 py-[3px] bg-red-500 text-white">
-                                    Delete {product.cartId}
+                                  <button
+                                    onClick={() =>
+                                      dispatch(
+                                        deleteCartProduct(product.cartId)
+                                      )
+                                    }
+                                    className="px-5 py-[3px] bg-red-500 text-white"
+                                  >
+                                    Delete
                                   </button>
                                 </div>
                               </div>
@@ -191,11 +281,11 @@ function ShopCart() {
                   </h2>
                   <div className="flex justify-between items-center">
                     <span> {totalQuantity} items</span>
-                    <span>$ 300</span>
+                    <span>$ {totalPrice}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span> Shipping Fee</span>
-                    <span>$ 30</span>
+                    <span>$ {productsIncart.length * 20}</span>
                   </div>
                   <div className="flex gap-2">
                     <input
@@ -209,7 +299,9 @@ function ShopCart() {
                   </div>
                   <div className="flex justify-between items-center p-3">
                     <span className="text-xl font-bold"> Total</span>
-                    <span className="text-lg font-bold">$ 30</span>
+                    <span className="text-lg font-bold">
+                      $ {totalPrice + productsIncart.length * 20}
+                    </span>
                   </div>
                   <button
                     onClick={redirect}
