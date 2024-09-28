@@ -14,4 +14,8 @@ router.get(
   customerControllers.get_product_detail
 );
 
+router.post("/update_profile/", customerControllers.update_profile);
+
+router.post("/change_password/", customerControllers.change_password);
+
 module.exports = router;

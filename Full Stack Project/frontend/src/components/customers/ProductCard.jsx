@@ -52,7 +52,7 @@ function ProductCard({ rating, product }) {
         <img
           src={product.images?.[0] || product.image}
           alt=""
-          className="h-[240px] w-full rounded-md"
+          className="h-[240px] w-full rounded-md object-contain"
         />
 
         <ul className="flex transiton-all duration-700 -bottom-10 justify-center items-center gap-2 absolute w-full group-hover:bottom-3">
@@ -84,13 +84,15 @@ function ProductCard({ rating, product }) {
       <div className="py-3 text-slate-600 px-2 bg-[#fcfcfc]">
         <h2 className="font-bold">{product.slug}</h2>
         <div className="flex justify-start items-center gap-3">
-          {product.discount !== null ? (
+          {product.discount !== 0 ? (
             <>
               <span className="line-through text-md font-semibold">
                 ${product.price}
               </span>
               <span className=" text-red-500">
-                ${product.price - Math.floor((300 * product.discount) / 100)}
+                $
+                {product.price -
+                  Math.floor((product.price * product.discount) / 100)}
               </span>
             </>
           ) : (

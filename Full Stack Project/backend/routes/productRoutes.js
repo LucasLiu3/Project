@@ -24,10 +24,8 @@ router.post(
   productControllers.products_one_update
 );
 
-// router.post(
-//   "/products-image-update",
-//   authMiddleware,
-//   productControllers.products_image_update
-// );
+router.post("/update_review", productControllers.update_review);
+
+router.get("/get_reviews/:productId", productControllers.get_reviews);
 
 module.exports = router;

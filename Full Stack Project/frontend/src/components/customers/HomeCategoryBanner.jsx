@@ -56,7 +56,11 @@ function HomeCategoryBanner({ category }) {
             to={`/products?category=${each.slug}`}
           >
             <div className="w-full h-full relative p-3">
-              <img src={each.image} alt="" className="h-full w-full" />
+              <img
+                src={each.image}
+                alt=""
+                className="h-full w-full object-contain"
+              />
               <div className="absolute bottom-6 w-full mx-auto font-bold left-0 flex justify-center items-center">
                 <span className="py-[2px] px-6 bg-[#3330305d] text-white">
                   {each.slug}

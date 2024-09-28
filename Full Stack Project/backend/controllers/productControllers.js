@@ -2,7 +2,12 @@ const { responseReturn } = require("../utilities/response");
 const categoryModel = require("../models/categoryModel");
 const formidable = require("formidable");
 const productModel = require("../models/productModel");
+const reviewModel = require("../models/reviewModel");
 const cloudinary = require("cloudinary").v2;
+const moment = require("moment-timezone");
+const {
+  mongo: { ObjectId },
+} = require("mongoose");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -178,7 +183,6 @@ class productControllers {
       } = fields;
 
       try {
-        // 处理图片上传
         const oldImagesList = oldImages.split(",");
 
         const { images } = await productModel.findById(productId);
@@ -203,7 +207,6 @@ class productControllers {
           newImageList = [...newImageList, ...uploadedImageUrls];
         }
 
-        // 更新产品数据和图片
         const updatedProduct = await productModel.findByIdAndUpdate(
           productId,
           {
@@ -229,6 +232,121 @@ class productControllers {
         return responseReturn(res, 500, { error: error.message });
       }
     });
+  };
+
+  update_review = async (req, res) => {
+    const { productId, rating, review, name } = req.body;
+
+    try {
+      const tempDate = moment().tz("Pacific/Auckland").format("DD/MM/YYYY");
+
+      await reviewModel.create({
+        productId,
+        rating,
+        review,
+        customerName: name,
+        date: tempDate,
+      });
+
+      const reviews = await reviewModel.find({ productId });
+
+      const totalRevewRating = reviews.reduce(
+        (acu, cur) => acu + cur.rating,
+        0
+      );
+
+      let productRating = 0;
+      if (reviews.length !== 0) {
+        productRating = (totalRevewRating / reviews.length).toFixed(1);
+      }
+
+      await productModel.findByIdAndUpdate(productId, {
+        rating: productRating,
+      });
+
+      return responseReturn(res, 200, {
+        message: "Review Submit Successfully",
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_reviews = async (req, res) => {
+    const { productId } = req.params;
+
+    try {
+      const ratingGroup = await reviewModel.aggregate([
+        {
+          $match: {
+            productId: {
+              $eq: new ObjectId(productId),
+            },
+            rating: {
+              $not: {
+                $size: 0,
+              },
+            },
+          },
+        },
+        {
+          $unwind: "$rating",
+        },
+        {
+          $group: {
+            _id: "$rating",
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+      ]);
+
+      let rating_review = [
+        {
+          rating: 5,
+          sum: 0,
+        },
+        {
+          rating: 4,
+          sum: 0,
+        },
+        {
+          rating: 3,
+          sum: 0,
+        },
+        {
+          rating: 2,
+          sum: 0,
+        },
+        {
+          rating: 1,
+          sum: 0,
+        },
+      ];
+
+      rating_review.map((each) =>
+        ratingGroup.forEach((group) => {
+          if (each.rating === group._id) each.sum = group.count;
+        })
+      );
+
+      const allReivews = await reviewModel
+        .find({
+          productId,
+        })
+        .sort({ createdAt: -1 });
+
+      return responseReturn(res, 200, {
+        rating_review,
+        reviews: allReivews,
+        totalReview: allReivews.length,
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
   };
 }
 

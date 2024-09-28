@@ -1,6 +1,6 @@
 const adminModel = require("../models/adminModel");
 const sellerModel = require("../models/sellerModel");
-const sellerToCustomer = require("../models/chat/sellerToCustomerModel");
+const chatModel = require("../models/chat/chatModel");
 
 const { responseReturn } = require("../utilities/response");
 const bcrypt = require("bcrypt");
@@ -89,7 +89,7 @@ class authControllers {
         shopInfo: {},
       });
 
-      await sellerToCustomer.create({
+      await chatModel.create({
         myId: newSeller.id,
       });
 

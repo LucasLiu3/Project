@@ -6,6 +6,16 @@ const customerSchema = new Schema(
     email: { type: String, required: true },
     password: { type: String, required: true, select: false },
     method: { type: String, required: true },
+    profile: {
+      type: Object,
+      default: {
+        name: "",
+        address: "",
+        phone: "",
+        email: "",
+        city: "",
+      },
+    },
   },
   { timestamps: true }
 );

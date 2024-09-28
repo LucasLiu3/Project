@@ -17,6 +17,7 @@ import ChangePassword from "../../components/customers/dashboard/ChangePassword"
 import WishList from "../../components/customers/dashboard/WishList";
 import StripePage from "../../views/pages/StripePage";
 import OrderDetail from "./../../components/customers/dashboard/OrderDetail";
+import Chat from "../../components/customers/dashboard/Chat";
 
 const Home = lazy(() => import("../../views/pages/Home"));
 const SellerLogin = lazy(() => import("../../views/auth/SellerLogin"));
@@ -97,6 +98,14 @@ const publicRoutesList = [
       {
         path: "/customerDashboard/myOrders/details/:orderId",
         element: <OrderDetail />,
+      },
+      {
+        path: "/customerDashboard/chat",
+        element: <Chat />,
+      },
+      {
+        path: "/customerDashboard/chat/:sellerId",
+        element: <Chat />,
       },
       // { path: "chat", element: <Chat /> },
       // // { path: "logout", element: <Logout /> },

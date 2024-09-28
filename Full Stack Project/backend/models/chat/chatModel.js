@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const sellerToCustomerSchema = new Schema(
+const chatSchema = new Schema(
   {
     myId: { type: String, required: true },
     othersId: { type: Array, default: [] },
@@ -8,4 +8,4 @@ const sellerToCustomerSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = model("sellerChatCustomer", sellerToCustomerSchema);
+module.exports = model("chats", chatSchema);

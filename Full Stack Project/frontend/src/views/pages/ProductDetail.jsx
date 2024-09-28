@@ -181,7 +181,7 @@ function ProductDetail() {
             <div>
               <div className="p-5 border">
                 <img
-                  className="h-[400px] w-full"
+                  className="h-[400px] w-full object-contain"
                   src={selectedImg || productDetail.images?.[0]}
                   alt=""
                 />
@@ -309,7 +309,7 @@ function ProductDetail() {
                   ""
                 )}
                 <Link
-                  to="#"
+                  to={`/customerDashboard/chat/${productDetail.sellerId}`}
                   className="px-8 py-3 h-[50px] cursor-pointer hover:shadow-lg hover:shadow-red-500/40 bg-red-500 text-white"
                 >
                   Chat Seller
@@ -346,7 +346,7 @@ function ProductDetail() {
 
                 <div>
                   {side ? (
-                    <Reviews></Reviews>
+                    <Reviews productDetail={productDetail}></Reviews>
                   ) : (
                     <p className="py-5 text-slate-500">
                       {productDetail.description}

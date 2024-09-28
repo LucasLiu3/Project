@@ -9,18 +9,18 @@ function Shipping() {
     state: { products, price, shippingFee, items },
   } = useLocation();
 
-  console.log(price);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { customerInfo } = useSelector((state) => state.customer);
-
+  const { customerInfo, updatedProfile } = useSelector(
+    (state) => state.customer
+  );
   const [info, setInfo] = useState({
-    name: "",
-    address: "",
-    phone: "",
-    email: "",
-    city: "",
+    name: customerInfo.profile.name || "",
+    address: customerInfo.profile.address || "",
+    phone: customerInfo.profile.phone || "",
+    email: customerInfo.profile.email || "",
+    city: customerInfo.profile.city || "",
   });
 
   const [showInput, setShowInput] = useState(true);
@@ -75,6 +75,7 @@ function Shipping() {
                             id="name"
                             name="name"
                             placeholder="name"
+                            value={info.name}
                             onChange={infoChange}
                             className="w-full px-3 py-2 border border-slate-300 outline-none focus:border-slate-700 rounded-md"
                           />
@@ -86,6 +87,7 @@ function Shipping() {
                             id="address"
                             name="address"
                             place="address"
+                            value={info.address}
                             onChange={infoChange}
                             className="w-full px-3 py-2 border border-slate-300 outline-none focus:border-slate-700 rounded-md"
                           />
@@ -99,6 +101,7 @@ function Shipping() {
                             id="phone"
                             name="phone"
                             placeholder="phone"
+                            value={info.phone}
                             onChange={infoChange}
                             className="w-full px-3 py-2 border border-slate-300 outline-none focus:border-slate-700 rounded-md"
                           />
@@ -110,6 +113,7 @@ function Shipping() {
                             id="email"
                             name="email"
                             place="email"
+                            value={info.email}
                             onChange={infoChange}
                             className="w-full px-3 py-2 border border-slate-300 outline-none focus:border-slate-700 rounded-md"
                           />
@@ -123,6 +127,7 @@ function Shipping() {
                             id="city"
                             name="city"
                             placeholder="city"
+                            value={info.city}
                             onChange={infoChange}
                             className="w-full px-3 py-2 border border-slate-300 outline-none focus:border-slate-700 rounded-md"
                           />

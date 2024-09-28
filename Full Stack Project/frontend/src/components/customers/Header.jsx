@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, redirect, useNavigate } from "react-router-dom";
 
 import { MdEmail } from "react-icons/md";
 import { IoIosArrowDown, IoIosPhonePortrait } from "react-icons/io";
@@ -12,6 +12,7 @@ import { getCartProduct, getWishList } from "../../store/Reducers/cartReducer";
 
 function Header() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { category } = useSelector((state) => state.category);
   const { customerInfo } = useSelector((state) => state.customer);
   const { cartTotal, wishListTotal } = useSelector((state) => state.cart);
@@ -30,6 +31,12 @@ function Header() {
 
   function toggleOpen() {
     setIsOpen(!isOpen);
+  }
+
+  function logout() {
+    localStorage.removeItem("customerToken");
+    navigate("/");
+    window.location.reload();
   }
 
   const path = [
@@ -81,14 +88,17 @@ function Header() {
                           to="/customerDashboard"
                           onClick={() => setIsOpen(false)}
                         >
-                          Profile
+                          Dashboard
                         </Link>
-                        <Link
+                        <div
                           className="p-2 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => setIsOpen(false)}
+                          onClick={() => {
+                            setIsOpen(false);
+                            logout();
+                          }}
                         >
                           Log out
-                        </Link>
+                        </div>
                       </ul>
                     </div>
                   )}

@@ -96,6 +96,35 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+export const update_review = createAsyncThunk(
+  "product/update_review",
+  async (reviewObejct, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      console.log(reviewObejct);
+      const { data } = await api.post(`/product/update_review`, reviewObejct, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const get_reviews = createAsyncThunk(
+  "product/get_reviews",
+  async (productId, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.get(`/product/get_reviews/${productId}`, {
+        withCredentials: true,
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const productReducer = createSlice({
   name: "product",
   initialState: {
@@ -105,6 +134,9 @@ const productReducer = createSlice({
     errorMessage: "",
     loader: false,
     productsAll: [],
+    rating_review: [],
+    reviews: [],
+    totalReview: 0,
   },
   reducers: {
     messageClear: (state) => {
@@ -168,6 +200,31 @@ const productReducer = createSlice({
         state.successMessage = action.payload.message;
       })
       .addCase(getProductsAll.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
+      })
+      .addCase(update_review.pending, (state, action) => {
+        state.loader = true;
+      })
+      .addCase(update_review.fulfilled, (state, action) => {
+        state.loader = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(update_review.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
+      })
+      .addCase(get_reviews.pending, (state, action) => {
+        state.loader = true;
+      })
+      .addCase(get_reviews.fulfilled, (state, action) => {
+        state.loader = false;
+        state.successMessage = action.payload.message;
+        state.reviews = action.payload.reviews;
+        state.rating_review = action.payload.rating_review;
+        state.totalReview = action.payload.totalReview;
+      })
+      .addCase(get_reviews.rejected, (state, action) => {
         state.loader = false;
         state.errorMessage = action.payload.error;
       });

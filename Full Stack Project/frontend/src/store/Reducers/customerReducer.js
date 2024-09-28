@@ -34,6 +34,47 @@ export const customerLogin = createAsyncThunk(
   }
 );
 
+export const update_profile = createAsyncThunk(
+  "customer/update_profile",
+  async ({ profile, customerId }, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const updateDate = { profile, customerId };
+      const { data } = await api.post(`/customer/update_profile/`, updateDate, {
+        withCredentials: true,
+      });
+
+      localStorage.setItem("customerToken", data.token);
+
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const change_password = createAsyncThunk(
+  "customer/change_password",
+  async (
+    { oldPassword, newPassword, customerId },
+    { rejectWithValue, fulfillWithValue }
+  ) => {
+    try {
+      const updateDate = { oldPassword, newPassword, customerId };
+      const { data } = await api.post(
+        `/customer/change_password/`,
+        updateDate,
+        {
+          withCredentials: true,
+        }
+      );
+
+      return fulfillWithValue(data);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 function decodeToken(token) {
   if (token) {
     const decodeToken = jwtDecode(token);
@@ -57,8 +98,6 @@ const customerReducer = createSlice({
     successMessage: "",
     errorMessage: "",
     loader: false,
-    // role: returnRole(localStorage.getItem("accessToken")),
-    // token: localStorage.getItem("accessToken"),
   },
 
   reducers: {
@@ -90,6 +129,29 @@ const customerReducer = createSlice({
         state.customerInfo = decodeToken(action.payload.token);
       })
       .addCase(customerLogin.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
+      })
+      .addCase(update_profile.pending, (state, action) => {
+        state.loader = true;
+      })
+      .addCase(update_profile.fulfilled, (state, action) => {
+        state.loader = false;
+        state.successMessage = action.payload.message;
+        state.customerInfo = decodeToken(action.payload.token);
+      })
+      .addCase(update_profile.rejected, (state, action) => {
+        state.loader = false;
+        state.errorMessage = action.payload.error;
+      })
+      .addCase(change_password.pending, (state, action) => {
+        state.loader = true;
+      })
+      .addCase(change_password.fulfilled, (state, action) => {
+        state.loader = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(change_password.rejected, (state, action) => {
         state.loader = false;
         state.errorMessage = action.payload.error;
       });

@@ -63,74 +63,90 @@ const WishList = () => {
   }, [successMessage, errorMessage, dispatch, customerInfo]);
 
   return (
-    <div className="w-full grid grid-cols-4 gap-6 bg-white p-2">
-      {wishList.map((product, i) => (
-        <div
-          key={i}
-          className="border outline-0 group transition-all duration-500 hover:shadow-md hover:-mt-3"
-        >
-          <div className="relative overflow-hidden">
-            {product.discount ? (
-              <div className="flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2 ">
-                -{product.discount}%
-              </div>
-            ) : (
-              ""
-            )}
-            <img
-              src={product.image}
-              alt=""
-              className="h-[240px] w-full rounded-md"
-            />
-
-            <ul className="flex transiton-all duration-700 -bottom-10 justify-center items-center gap-2 absolute w-full group-hover:bottom-3">
-              <li
-                className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
-                   hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
-                onClick={() => remove_wishList(product._id)}
-              >
-                <FaRegHeart></FaRegHeart>
-              </li>
-              <li
-                className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
-                   hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
-              >
-                <Link to={`http://localhost:3000/product/${product.productId}`}>
-                  <FaEye></FaEye>
-                </Link>
-              </li>
-              <li
-                className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
-                   hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
-                onClick={() => add_to_cart(product.productId)}
-              >
-                <RiShoppingCartLine></RiShoppingCartLine>
-              </li>
-            </ul>
-          </div>
-
-          <div className="py-3 text-slate-600 px-2 bg-[#fcfcfc]">
-            <h2 className="font-bold">{product.name}</h2>
-            <div className="flex justify-start items-center gap-3">
-              {product.discount !== null ? (
-                <>
-                  <span className="line-through text-md font-semibold">
-                    ${product.price}
-                  </span>
-                  <span className=" text-red-500">
-                    $
-                    {product.price - Math.floor((300 * product.discount) / 100)}
-                  </span>
-                </>
-              ) : (
-                <span className="text-md font-semibold">${product.price}</span>
-              )}
-
-              <Rating rating={product.rating}></Rating>
-            </div>
-          </div>
+    <div className="w-full p-2  bg-white rounded-md">
+      <h2 className="text-xl font-semibold text-slate-600 mb-5">
+        My wishlist{" "}
+      </h2>
+      {wishList.length === 0 ? (
+        <div className="w-full h-[240px] flex justify-center items-center">
+          <p>
+            <span className="text-xl">The Wishlist is empty.</span>{" "}
+            <Link className="text-lg text-indigo-500 px-2" to="/shop">
+              Go shop
+            </Link>
+          </p>
         </div>
-      ))}
+      ) : (
+        <div className="grid grid-cols-4 gap-6 bg-white">
+          {wishList.map((product, i) => (
+            <div
+              key={i}
+              className="border outline-0 group transition-all duration-500 hover:shadow-md hover:-mt-3"
+            >
+              <div className="relative overflow-hidden">
+                {product.discount ? (
+                  <div className="flex justify-center items-center absolute text-white w-[38px] h-[38px] rounded-full bg-red-500 font-semibold text-xs left-2 top-2">
+                    -{product.discount}%
+                  </div>
+                ) : null}
+                <img
+                  src={product.image}
+                  alt=""
+                  className="h-[240px] w-full rounded-md object-contain"
+                />
+                <ul className="flex transition-all duration-700 -bottom-10 justify-center items-center gap-2 absolute w-full group-hover:bottom-3">
+                  <li
+                    className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
+                     hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
+                    onClick={() => remove_wishList(product._id)}
+                  >
+                    <FaRegHeart />
+                  </li>
+                  <li
+                    className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
+                     hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
+                  >
+                    <Link
+                      to={`http://localhost:3000/product/${product.productId}`}
+                    >
+                      <FaEye />
+                    </Link>
+                  </li>
+                  <li
+                    className="w-[38px] h-[38px] cursor-pointer bg-white flex justify-center items-center rounded-full 
+                     hover:bg-red-500 hover:text-white hover:rotate-[720deg] transition-all"
+                    onClick={() => add_to_cart(product.productId)}
+                  >
+                    <RiShoppingCartLine />
+                  </li>
+                </ul>
+              </div>
+              <div className="py-3 text-slate-600 px-2 bg-[#fcfcfc]">
+                <h2 className="font-bold">{product.name}</h2>
+                <div className="flex justify-start items-center gap-3">
+                  {product.discount !== null ? (
+                    <>
+                      <span className="line-through text-md font-semibold">
+                        ${product.price}
+                      </span>
+                      <span className="text-red-500">
+                        $
+                        {product.price -
+                          Math.floor((300 * product.discount) / 100)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-md font-semibold">
+                      ${product.price}
+                    </span>
+                  )}
+                  <Rating rating={product.rating} />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

@@ -122,55 +122,61 @@ const MyOrders = () => {
                 </tr>
               </thead>
               <tbody>
-                {showOrders.map((each, index) => (
-                  <tr className="bg-white border-b" key={index}>
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                      #{each._id}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                      ${each.price}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                      {each.payment_status}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                      {each.delivery_status}
-                    </td>
-                    <td
-                      scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                      <Link
-                        to={`/customerDashboard/myOrders/details/${each._id}`}
+                {showOrders.length > 0 ? (
+                  showOrders.map((each, index) => (
+                    <tr className="bg-white border-b" key={index}>
+                      <td
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
                       >
-                        <span className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded">
-                          View
-                        </span>
-                      </Link>
-
-                      {each.payment_status === "unpaid" && (
-                        <span
-                          onClick={() => redirect(each._id)}
-                          className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded hover:cursor-pointer"
+                        #{each._id}
+                      </td>
+                      <td
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
+                      >
+                        ${each.price}
+                      </td>
+                      <td
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
+                      >
+                        {each.payment_status}
+                      </td>
+                      <td
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
+                      >
+                        {each.delivery_status}
+                      </td>
+                      <td
+                        scope="row"
+                        className="px-6 py-4 font-medium whitespace-nowrap"
+                      >
+                        <Link
+                          to={`/customerDashboard/myOrders/details/${each._id}`}
                         >
-                          Pay Now
-                        </span>
-                      )}
-                    </td>
+                          <span className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded">
+                            View
+                          </span>
+                        </Link>
+
+                        {each.payment_status === "unpaid" && (
+                          <span
+                            onClick={() => redirect(each._id)}
+                            className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded hover:cursor-pointer"
+                          >
+                            Pay Now
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr className="felx justify-center py-3 text-2xl font-semibold">
+                    <td>No order record</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
