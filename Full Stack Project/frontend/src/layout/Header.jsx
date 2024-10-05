@@ -1,6 +1,9 @@
 import { FaList } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function Header({ showSidebar, setShowSidebar }) {
+  const { userInfo } = useSelector((state) => state.auth);
+
   return (
     <div className="fixed top-0 left-0 w-full py-5 px-2 lg:px-7 z-40">
       <div
@@ -29,11 +32,17 @@ function Header({ showSidebar, setShowSidebar }) {
         </div>
         <div className="flex justify-center items-center gap-3 relative">
           <div className="flex justify-center items-center flex-col text-end ">
-            <span className="text-md font-bold">Lucas Liu</span>
-            <span className="text-[14px] w-full font-normal">Admin</span>
+            <span className="text-md font-bold">{userInfo.name}</span>
+            <span className="text-[14px] w-full font-normal">
+              {userInfo.role}
+            </span>
           </div>
           <img
-            src="/images/admin.jpg"
+            src={
+              userInfo.image === "admin.png"
+                ? "/images/admin.jpg"
+                : userInfo.image
+            }
             alt=""
             className="w-[40px] h-[40px] rounded-full overflow-hidden"
           />

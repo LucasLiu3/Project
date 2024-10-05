@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { getNav } from "../navigation";
 import { MdOutlineLogout } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 function SideBar({ showSidebar, setShowSidebar }) {
+  const navigate = useNavigate();
   const [allNav, setAllNav] = useState([]);
 
   const { role } = useSelector((state) => state.auth);
@@ -16,6 +17,12 @@ function SideBar({ showSidebar, setShowSidebar }) {
     },
     [role]
   );
+
+  function logout() {
+    localStorage.removeItem("accessToken");
+    navigate("");
+    window.location.reload();
+  }
 
   return (
     <div>
@@ -59,6 +66,7 @@ function SideBar({ showSidebar, setShowSidebar }) {
           <button
             className="px-[12px] py-[9px] rounded-lg flex justify-left items-center gap-[12px] 
                  hover:pl-4 transition-all w-full mb-1 text-[#030811] font-bold duration-200"
+            onClick={logout}
           >
             <span>
               <MdOutlineLogout />

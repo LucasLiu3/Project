@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { HeadModule } from "./HeadModule";
 import { ContentModule } from "./ContentModule";
 
-function DashboardOrders({ role }) {
+function DashboardOrders({ role, recentOrder }) {
   const headerTitle = [
     "Order Id",
     "Price",
@@ -11,38 +11,6 @@ function DashboardOrders({ role }) {
     "Action",
   ];
 
-  const fakeContent = [
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-  ];
   return (
     <>
       <div className="flex justify-between items-center text-[#d0d2d6] font-semibold pb-3">
@@ -60,7 +28,7 @@ function DashboardOrders({ role }) {
 
           <tbody>
             <ContentModule
-              data={fakeContent}
+              data={recentOrder}
               content="order"
               role={role}
             ></ContentModule>

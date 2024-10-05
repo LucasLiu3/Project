@@ -1,6 +1,9 @@
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { update_order } from "../../store/Reducers/orderReducer";
+import {
+  create_payment,
+  update_order,
+} from "../../store/Reducers/orderReducer";
 import { useEffect } from "react";
 
 function StripePage() {
@@ -8,9 +11,11 @@ function StripePage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(() => {
     if (orderId) {
       dispatch(update_order(orderId));
+      dispatch(create_payment(orderId));
     }
 
     setTimeout(function () {

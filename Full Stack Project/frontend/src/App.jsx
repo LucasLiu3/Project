@@ -6,7 +6,6 @@ import { get_user_info } from "./store/Reducers/authReducer";
 import publicRoutes from "./router/routes/publicRoute";
 import { getCategory } from "./store/Reducers/categoryReducer";
 import { getProductsAll } from "./store/Reducers/productReducer";
-import { getCartProduct } from "./store/Reducers/cartReducer";
 
 export default function App() {
   const [allRoutes, setAllRoutes] = useState([publicRoutes()]);

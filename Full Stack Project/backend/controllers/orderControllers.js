@@ -7,7 +7,7 @@ const {
 } = require("mongoose");
 
 const { responseReturn } = require("../utilities/response");
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // 导入 Stripe
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const bcrypt = require("bcrypt");
 const { createToken } = require("../utilities/tokenCreate");
@@ -177,7 +177,7 @@ class orderControllers {
                 product.price * 100 * (1 - product.discount / 100)
               ),
             },
-            quantity: product.quantity, // 产品数量
+            quantity: product.quantity,
           };
         }),
         success_url: `http://localhost:3000/paymentSuccess/${orderId}`,
@@ -218,6 +218,111 @@ class orderControllers {
           $inc: { stock: -quantity },
         });
       }
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_orders_admin = async (req, res) => {
+    try {
+      const orders = await customerOrder.find().sort({ createdAt: -1 });
+
+      return responseReturn(res, 200, {
+        orders,
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_order_detail_admin = async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+      const oneOrder = await customerOrder.findById(orderId);
+
+      const orderDetails = await adminOrder.find({ orderId: orderId });
+
+      return responseReturn(res, 200, {
+        oneOrder,
+        orderDetails,
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_orders_seller = async (req, res) => {
+    const { sellerId } = req.params;
+
+    try {
+      const orders = await adminOrder
+        .find({ sellerId: sellerId })
+        .sort({ createdAt: -1 });
+
+      return responseReturn(res, 200, {
+        orders,
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  get_order_details_seller = async (req, res) => {
+    const { orderId } = req.params;
+
+    try {
+      const orderDetails = await adminOrder.findById(orderId);
+
+      const customerOrderId = orderDetails.orderId;
+
+      const oneOrder = await customerOrder.findById(customerOrderId);
+
+      return responseReturn(res, 200, {
+        oneOrder,
+        orderDetails,
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  order_update_admin = async (req, res) => {
+    const { orderId } = req.params;
+    const { state } = req.body;
+
+    try {
+      await customerOrder.findByIdAndUpdate(orderId, {
+        delivery_status: state,
+      });
+
+      return responseReturn(res, 200, {
+        message: "Order Status Updated",
+      });
+    } catch (error) {
+      console.log(error);
+      return responseReturn(res, 500, { error: error.message });
+    }
+  };
+
+  order_update_seller = async (req, res) => {
+    const { orderId } = req.params;
+    const { state } = req.body;
+
+    console.log(orderId);
+    console.log(state);
+    try {
+      await adminOrder.findByIdAndUpdate(orderId, {
+        delivery_status: state,
+      });
+      return responseReturn(res, 200, {
+        message: "Order Status Updated",
+      });
     } catch (error) {
       console.log(error);
       return responseReturn(res, 500, { error: error.message });

@@ -8,6 +8,7 @@ import PasswordChange from "../../components/shared/PasswordChange";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { messageClear } from "../../store/Reducers/profileReducer";
+import { seller_create_payment_account } from "../../store/Reducers/sellerReducer";
 
 function SellerProfile() {
   const dispatch = useDispatch();
@@ -33,6 +34,10 @@ function SellerProfile() {
     [successMessage, errorMessage, dispatch]
   );
 
+  function updatePayment() {
+    dispatch(seller_create_payment_account());
+  }
+
   return (
     <div className="w-full flex flex-wrap">
       <div className="w-full md:w-6/12">
@@ -42,7 +47,10 @@ function SellerProfile() {
             loader={loader}
           ></SellerProfilePic>
 
-          <SellerProfileInfo userInfo={profile}></SellerProfileInfo>
+          <SellerProfileInfo
+            userInfo={profile}
+            updatePayment={updatePayment}
+          ></SellerProfileInfo>
 
           <SellerProfileShop userInfo={profile}></SellerProfileShop>
         </div>

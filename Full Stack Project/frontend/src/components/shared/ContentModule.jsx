@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
+import { GiConfirmed } from "react-icons/gi";
 
-export function ContentModule({ data, content, role }) {
+import moment from "moment";
+
+export function ContentModule({ data, content, role, approvelRequest }) {
   if (content === "category") {
-    return data.map((each, index) => (
+    return data?.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
           {each.number ? each.number + 1 : index + 1}
@@ -54,15 +57,15 @@ export function ContentModule({ data, content, role }) {
   }
 
   if (content === "order") {
-    return data.map((each, index) => (
+    return data?.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-          {each.number ? each.number + 1 : index + 1}
+          #{each._id}
         </th>
 
         {each.price && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            ${each.price}
+            ${each.price.toFixed(2)}
           </th>
         )}
 
@@ -72,9 +75,9 @@ export function ContentModule({ data, content, role }) {
           </th>
         )}
 
-        {each.orderStatue && (
+        {each.delivery_status && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            {each.orderStatue}
+            {each.delivery_status}
           </th>
         )}
 
@@ -84,8 +87,10 @@ export function ContentModule({ data, content, role }) {
               <Link
                 to={
                   role === "seller"
-                    ? `/seller/order/2`
-                    : `/admin/${each.orderStatue ? "order" : "seller"}/2`
+                    ? `/seller/order/${each._id}`
+                    : `/admin/${each.delivery_status ? "order" : "seller"}/${
+                        each._id
+                      }`
                 }
                 className="p-[6px] bg-green-500 rounded-full hover:shadow-lg hover:shadow-green-500/50"
               >
@@ -99,7 +104,7 @@ export function ContentModule({ data, content, role }) {
   }
 
   if (content === "payment") {
-    return data.map((each, index) => (
+    return data?.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
           {each.number ? each.number + 1 : index + 1}
@@ -109,14 +114,14 @@ export function ContentModule({ data, content, role }) {
             {each.amount}
           </th>
         )}
-        {each.request_status && (
+        {each.status && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            {each.request_status}
+            {each.status}
           </th>
         )}
-        {each.date && (
+        {each.createdAt && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            {each.date}
+            {moment(each.createdAt).format("DD/MM/YYYY")}
           </th>
         )}
 
@@ -124,9 +129,13 @@ export function ContentModule({ data, content, role }) {
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap ">
             <div className="flex justify-center items-center gap-5">
               <>
-                <Link className="p-[6px] bg-green-500 rounded-full hover:shadow-lg hover:shadow-green-500/50">
-                  <FaEye className="w-[18px] h-[18px]" />
-                </Link>
+                <div
+                  onClick={() => approvelRequest(each._id)}
+                  className="p-[6px] bg-green-500 rounded-full hover:shadow-lg hover:shadow-green-500/50
+                  hover:cursor-pointer"
+                >
+                  <GiConfirmed className="w-[18px] h-[18px]" />
+                </div>
               </>
             </div>
           </th>
@@ -136,7 +145,7 @@ export function ContentModule({ data, content, role }) {
   }
 
   if (content === "sellers") {
-    return data.map((each, index) => (
+    return data?.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
           {each.number ? each.number + 1 : index + 1}
@@ -198,7 +207,7 @@ export function ContentModule({ data, content, role }) {
   }
 
   if (content === "products") {
-    return data.map((each, index) => (
+    return data?.map((each, index) => (
       <tr key={index}>
         <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
           {each.number ? each.number + 1 : index + 1}

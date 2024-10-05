@@ -46,6 +46,38 @@ export const update_status = createAsyncThunk(
   }
 );
 
+export const seller_create_payment_account = createAsyncThunk(
+  "sellers/seller_create_payment_account",
+
+  async () => {
+    try {
+      const { data } = await api.get(`/payment/seller_create_payment_account`, {
+        withCredentials: true,
+      });
+      window.location.href = data.url;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const seller_update_payment_status = createAsyncThunk(
+  "sellers/seller_update_payment_status",
+
+  async (sellerId, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      const { data } = await api.post(
+        `/payment/seller_update_payment_status/${sellerId}`,
+        {
+          withCredentials: true,
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const sellereReducer = createSlice({
   name: "sellers",
   initialState: {

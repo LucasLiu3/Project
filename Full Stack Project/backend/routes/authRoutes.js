@@ -19,4 +19,16 @@ router.post(
   authControllers.update_shop_info
 );
 
+router.get(
+  "/admin_get_dashboard_data",
+  authMiddleware,
+  authControllers.admin_get_dashboard_data
+);
+
+router.get(
+  "/seller_get_dashboard_data",
+  authMiddleware,
+  authControllers.seller_get_dashboard_data
+);
+
 module.exports = router;

@@ -17,14 +17,6 @@ import toast from "react-hot-toast";
 function Shop() {
   const dispatch = useDispatch();
 
-  useEffect(
-    function () {
-      dispatch(getProductsAll());
-      dispatch(getCategory());
-    },
-    [dispatch]
-  );
-
   let { productsAll, loader } = useSelector((state) => state.product);
   const { category } = useSelector((state) => state.category);
 
@@ -75,7 +67,7 @@ function Shop() {
       productsAll = productsAll.sort((a, b) => b.rating - a.rating);
   }
 
-  let productsAllShow = productsAll.slice(startIndex, endIndex);
+  let productsAllShow = productsAll?.slice(startIndex, endIndex);
 
   function clearFilter() {
     setPriceRange({ values: [lowestPrice, HighestPrice] });
@@ -88,6 +80,14 @@ function Shop() {
     successMessage: addcartsuccess,
     errorMessage: addcarterror,
   } = useSelector((state) => state.cart);
+
+  useEffect(
+    function () {
+      dispatch(getProductsAll());
+      dispatch(getCategory());
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (addcartsuccess) {
@@ -269,15 +269,15 @@ function Shop() {
                 </div>
 
                 <div className="pb-8">
-                  <div className="w-full grid grid-cols-3 gap-3">
-                    {productsAllShow.map((c, i) => (
-                      <ProductCard
-                        rating={c.rating}
-                        key={i}
-                        product={c}
-                      ></ProductCard>
-                    ))}
-                  </div>
+                  {loader ? (
+                    <div>Loading...</div>
+                  ) : (
+                    <div className="w-full grid grid-cols-3 gap-3">
+                      {productsAllShow?.map((c, i) => (
+                        <ProductCard rating={c.rating} key={i} product={c} />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-end">

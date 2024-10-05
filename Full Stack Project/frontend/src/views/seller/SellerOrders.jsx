@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Pagination from "../../components/Pagination";
 import { HeadModule } from "../../components/shared/HeadModule";
 import { ContentModule } from "./../../components/shared/ContentModule";
 import Filter from "../../components/shared/Filter";
+import { useDispatch, useSelector } from "react-redux";
+import { get_orders_seller } from "../../store/Reducers/orderReducer";
 
 function SellerOrders() {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
+  const dispatch = useDispatch();
+
   const [searchContent, setSearchContent] = useState("");
+
+  const { userInfo } = useSelector((state) => state.auth);
+  const { orders } = useSelector((state) => state.order);
 
   const headerTitle = [
     "Order Id",
@@ -19,38 +26,12 @@ function SellerOrders() {
     "Action",
   ];
 
-  const fakeContent = [
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
+  useEffect(
+    function () {
+      dispatch(get_orders_seller(userInfo._id));
     },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-    {
-      orderId: 1,
-      price: "333",
-      payment_status: "paid",
-      orderStatue: "pending",
-    },
-  ];
+    [userInfo, dispatch]
+  );
 
   return (
     <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -68,7 +49,7 @@ function SellerOrders() {
 
           <tbody>
             <ContentModule
-              data={fakeContent}
+              data={orders}
               content="order"
               role="seller"
             ></ContentModule>
@@ -81,7 +62,7 @@ function SellerOrders() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           perPage={perPage}
-          totalItem={35}
+          totalItem={orders.length}
           showPageNmber={3}
         ></Pagination>
       </div>

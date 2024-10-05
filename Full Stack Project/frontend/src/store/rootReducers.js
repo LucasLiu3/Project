@@ -8,6 +8,9 @@ import cartReducer from "./Reducers/cartReducer";
 import orderReducer from "./Reducers/orderReducer";
 import CustomerDashboardReducer from "./Reducers/CustomerDashboardReducer";
 import chatReducer from "./Reducers/chatReducer";
+import chatInReducer from "./Reducers/chatInReducer";
+import paymentReducer from "./Reducers/paymentReducer";
+import dashboardReducer from "./Reducers/dashboardReducer";
 
 const rootReducer = {
   auth: authReducer,
@@ -20,6 +23,9 @@ const rootReducer = {
   order: orderReducer,
   customerDashboard: CustomerDashboardReducer,
   chat: chatReducer,
+  chatIn: chatInReducer,
+  payment: paymentReducer,
+  dashboard: dashboardReducer,
 };
 
 export default rootReducer;

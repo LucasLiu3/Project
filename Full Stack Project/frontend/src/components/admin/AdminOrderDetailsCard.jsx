@@ -1,12 +1,15 @@
-function AdminOrderDetailsCard() {
+function AdminOrderDetailsCard({ orders }) {
   return (
     <div className="flex flex-col gap-2 text-lg text-[#d0d2d6] w-[30%] pl-20">
-      <h2>Invoice: #213123</h2>
-      <span>Date: 17 Aug 2024</span>
-      <span>Payment Status: paid</span>
-      <span>Price: 333</span>
-      <h2>Delivery to : Customer Name </h2>
-      <span>Address: xxx street</span>
+      <h2>Invoice: {orders?._id}</h2>
+      <span>Date: {orders?.data}</span>
+      <span>Payment Status: {orders?.payment_status} </span>
+      <span>Price: {orders?.price} (Shipping fee inc)</span>
+      <h2>Delivery Info : </h2>
+      <span>Name: {orders.shippingInfo?.name}</span>
+      <span>Email: {orders.shippingInfo?.email}</span>
+      <span>Phone: {orders.shippingInfo?.phone}</span>
+      <span>Address: {orders.shippingInfo?.address}</span>
     </div>
   );
 }

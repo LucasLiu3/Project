@@ -1,6 +1,6 @@
 import { FaRegEdit } from "react-icons/fa";
 
-function SellerProfileInfo({ userInfo }) {
+function SellerProfileInfo({ userInfo, updatePayment }) {
   return (
     <div className="px-0 md:px-5 py-2">
       <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-slate-800 rounded-md relative">
@@ -21,17 +21,31 @@ function SellerProfileInfo({ userInfo }) {
         </div>
         <div className="flex gap-2">
           <span>Status : </span>
-          <span>{userInfo.status}</span>
+
+          <p>
+            {userInfo.status === "active" ? (
+              <span className="bg-green-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
+                {userInfo.status}
+              </span>
+            ) : (
+              <span className="bg-slate-300 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
+                Pending
+              </span>
+            )}
+          </p>
         </div>
         <div className="flex gap-2">
           <span>Payment Account : </span>
           <p>
-            {userInfo.status === "active" ? (
-              <span className="bg-red-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
+            {userInfo.payment === "active" ? (
+              <span className="bg-green-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
                 {userInfo.payment}
               </span>
             ) : (
-              <span className="bg-blue-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
+              <span
+                onClick={updatePayment}
+                className="bg-red-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded"
+              >
                 Click Active
               </span>
             )}

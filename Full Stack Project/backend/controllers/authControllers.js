@@ -2,11 +2,27 @@ const adminModel = require("../models/adminModel");
 const sellerModel = require("../models/sellerModel");
 const chatModel = require("../models/chat/chatModel");
 
+const allPaymentModel = require("../models/AllPaymentModel");
+const sellerPaymentModel = require("../models/SellerPayment");
+
+const productModel = require("../models/productModel");
+
+const customerOrder = require("../models/customerOrder");
+
+const adminSellerModel = require("../models/chat/adminSellerMessage");
+
 const { responseReturn } = require("../utilities/response");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../utilities/tokenCreate");
 const formidable = require("formidable");
 const cloudinary = require("cloudinary").v2;
+
+const {
+  mongo: { ObjectId },
+} = require("mongoose");
+
+const adminOrder = require("../models/adminOrder");
+const chatMessagesModel = require("../models/chat/chatMessagesModel");
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -202,6 +218,119 @@ class authControllers {
     } catch (error) {
       console.log(err);
       responseReturn(res, 500, { error: err.message });
+    }
+  };
+
+  admin_get_dashboard_data = async (req, res) => {
+    const { id } = req;
+
+    try {
+      const totalSale = await allPaymentModel.aggregate([
+        {
+          $group: {
+            _id: null,
+            totalAmount: {
+              $sum: "$amount",
+            },
+          },
+        },
+      ]);
+
+      const totalProduct = await productModel.find({}).countDocuments();
+
+      const totalOrder = await customerOrder.find({}).countDocuments();
+
+      const totalSeller = await sellerModel.find({}).countDocuments();
+
+      const messages = await adminSellerModel
+        .find({ senderName: { $ne: "admin" } })
+        .sort({ createdAt: -1 })
+        .limit(3);
+
+      const recentOrder = await customerOrder.find({}).limit(5);
+
+      return responseReturn(res, 201, {
+        totalProduct,
+        totalOrder,
+        totalSeller,
+        messages,
+        recentOrder,
+        totalSale: totalSale[0].totalAmount,
+      });
+    } catch (error) {
+      console.log(err);
+      responseReturn(res, 500, { error: err.message });
+    }
+  };
+
+  seller_get_dashboard_data = async (req, res) => {
+    const { id } = req;
+
+    try {
+      const totalSale = await sellerPaymentModel.aggregate([
+        {
+          $match: {
+            sellerId: { $eq: id },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            totalAmount: {
+              $sum: "$amount",
+            },
+          },
+        },
+      ]);
+
+      const totalProduct = await productModel
+        .find({
+          sellerId: new Object(id),
+        })
+        .countDocuments();
+      console.log("1");
+      const totalOrder = await adminOrder
+        .find({ sellerId: new Object(id) })
+        .countDocuments();
+      console.log("2");
+      const totalPendingOrder = await adminOrder
+        .find({
+          $and: [
+            {
+              sellerId: { $eq: new Object(id) },
+            },
+            {
+              delivery_status: {
+                $eq: "pending",
+              },
+            },
+          ],
+        })
+        .countDocuments();
+
+      console.log("3");
+      const messages = await chatMessagesModel
+        .find({ receivewId: { $eq: new Object(id) } })
+        .sort({ createdAt: -1 })
+        .limit(3);
+
+      console.log("4");
+      const recentOrder = await adminOrder
+        .find({ sellerId: new Object(id) })
+        .sort({ createdAt: -1 })
+        .limit(5);
+      console.log("5");
+      return responseReturn(res, 201, {
+        totalProduct,
+        totalOrder,
+        totalPendingOrder,
+        messages,
+        recentOrder,
+        totalSale: totalSale[0]?.totalAmount ? totalSale[0].totalAmount : 0,
+      });
+    } catch (error) {
+      console.log(error.message);
+      responseReturn(res, 500, { error: error.message });
     }
   };
 }

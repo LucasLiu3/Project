@@ -27,6 +27,10 @@ function AdminSellerInfo({ seller }) {
           <span>{seller.shopInfo ? seller.shopInfo.address : "-"}</span>
         </div>
         <div className="flex gap-3 font-bold text-[#000000]">
+          <span>Payment Status:</span>
+          <span>{seller.payment}</span>
+        </div>
+        <div className="flex gap-3 font-bold text-[#000000]">
           <span>Status:</span>
           <span>{seller.status}</span>
         </div>

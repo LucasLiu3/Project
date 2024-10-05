@@ -1,52 +1,51 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 
 import { HeadModule } from "./../../components/shared/HeadModule";
 import Filter from "../../components/shared/Filter";
 import { ContentModule } from "../../components/shared/ContentModule";
 import Pagination from "../../components/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  admin_approve_withdraw,
+  admin_get_withdraw,
+  messageClear,
+} from "../../store/Reducers/paymentReducer";
+import toast from "react-hot-toast";
 
 function AdminPaymentRequest() {
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
 
+  const dispatch = useDispatch();
   const [searchContent, setSearchContent] = useState("");
 
   const headTitle = ["No", "Amount", "Status", "Date", "Action"];
 
-  const fakeContent = [
-    {
-      requestID: 1,
-      amount: "333",
-      request_status: "pending",
-      date: "25 Dec 2023",
+  const { pendingPayment, successMessage } = useSelector(
+    (state) => state.payment
+  );
+
+  useEffect(
+    function () {
+      dispatch(admin_get_withdraw());
     },
-    {
-      requestID: 1,
-      amount: "333",
-      request_status: "pending",
-      date: "25 Dec 2023",
+    [dispatch]
+  );
+
+  useEffect(
+    function () {
+      if (successMessage) {
+        toast.success(successMessage);
+        dispatch(messageClear());
+        dispatch(admin_get_withdraw());
+      }
     },
-    {
-      requestID: 1,
-      amount: "333",
-      request_status: "pending",
-      date: "25 Dec 2023",
-    },
-    {
-      requestID: 1,
-      amount: "333",
-      request_status: "pending",
-      date: "25 Dec 2023",
-    },
-    {
-      requestID: 1,
-      amount: "333",
-      request_status: "pending",
-      date: "25 Dec 2023",
-    },
-  ];
+    [successMessage, dispatch]
+  );
+
+  function approvelRequest(requestId) {
+    dispatch(admin_approve_withdraw(requestId));
+  }
 
   return (
     <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -67,7 +66,11 @@ function AdminPaymentRequest() {
           </thead>
 
           <tbody>
-            <ContentModule data={fakeContent} content="payment"></ContentModule>
+            <ContentModule
+              data={pendingPayment}
+              content="payment"
+              approvelRequest={approvelRequest}
+            ></ContentModule>
           </tbody>
         </table>
       </div>
@@ -81,18 +84,6 @@ function AdminPaymentRequest() {
           showPageNmber={3}
         ></Pagination>
       </div>
-      {/* {
-            <List
-              style={{ minWidth: "340px" }}
-              className="List"
-              height={350}
-              itemCount={10}
-              itemSize={35}
-              outerElementType={outerElementType}
-            >
-              {Row}
-            </List>
-          } */}
     </div>
   );
 }

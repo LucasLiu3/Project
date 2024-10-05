@@ -47,20 +47,20 @@ export const allNav = [
     role: "admin",
     path: "/admin/payment_request",
   },
-  {
-    id: 6,
-    title: "Deactive Sellers",
-    icon: <FaUserTimes></FaUserTimes>,
-    role: "admin",
-    path: "/admin/deactive_sellers",
-  },
-  {
-    id: 7,
-    title: "Seller Request",
-    icon: <FaCodePullRequest></FaCodePullRequest>,
-    role: "admin",
-    path: "/admin/seller_request",
-  },
+  // {
+  //   id: 6,
+  //   title: "Deactive Sellers",
+  //   icon: <FaUserTimes></FaUserTimes>,
+  //   role: "admin",
+  //   path: "/admin/deactive_sellers",
+  // },
+  // {
+  //   id: 7,
+  //   title: "Seller Request",
+  //   icon: <FaCodePullRequest></FaCodePullRequest>,
+  //   role: "admin",
+  //   path: "/admin/seller_request",
+  // },
   {
     id: 8,
     title: "Live Chat",
@@ -89,13 +89,13 @@ export const allNav = [
     role: "seller",
     path: "/seller/new_product",
   },
-  {
-    id: 12,
-    title: "Discount Products",
-    icon: <CiDiscount1></CiDiscount1>,
-    role: "seller",
-    path: "/seller/discount_products",
-  },
+  // {
+  //   id: 12,
+  //   title: "Discount Products",
+  //   icon: <CiDiscount1></CiDiscount1>,
+  //   role: "seller",
+  //   path: "/seller/discount_products",
+  // },
 
   {
     id: 13,

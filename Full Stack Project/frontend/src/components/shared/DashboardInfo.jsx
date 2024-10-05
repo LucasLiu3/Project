@@ -3,11 +3,18 @@ import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { IoCartOutline } from "react-icons/io5";
 
-function DashboardInfo() {
+function DashboardInfo({
+  totalSale,
+  totalOrder,
+  totalProduct,
+  totalSeller,
+  totalPendingOrder,
+  role,
+}) {
   const displayInfo = [
     {
       title: "Total Sales",
-      number: "Placehoer",
+      number: `$ ${totalSale?.toFixed(2)}`,
       icon: <BsCurrencyDollar></BsCurrencyDollar>,
       bgColor: "#fae8e8",
       textColor: "#5c5a5a",
@@ -15,7 +22,7 @@ function DashboardInfo() {
     },
     {
       title: "Products",
-      number: "Placehoer",
+      number: totalProduct,
       icon: (
         <MdOutlineProductionQuantityLimits></MdOutlineProductionQuantityLimits>
       ),
@@ -24,16 +31,16 @@ function DashboardInfo() {
       iconColor: "#760077",
     },
     {
-      title: "Sellers",
-      number: "Placehoer",
+      title: `${role === "seller" ? "Total Orders" : "Sellers"}`,
+      number: `${role === "seller" ? totalOrder : totalSeller}`,
       icon: <FaUsers></FaUsers>,
       bgColor: "#e9feea",
       textColor: "#5c5a5a",
       iconColor: "#038000",
     },
     {
-      title: "Total Orders",
-      number: "Placehoer",
+      title: `${role === "seller" ? "Pending Orders" : "Total Orders"}`,
+      number: totalPendingOrder,
       icon: <IoCartOutline></IoCartOutline>,
       bgColor: "#ecebff",
       textColor: "#5c5a5a",

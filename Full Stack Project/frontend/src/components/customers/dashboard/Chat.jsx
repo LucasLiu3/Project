@@ -1,28 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineMessage, AiOutlinePlus } from "react-icons/ai";
 import { GrEmoji } from "react-icons/gr";
 import { IoSend } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
-import io from "socket.io-client";
+import { NavLink, useParams } from "react-router-dom";
+
 import {
   customer_add_friends,
+  messageClear,
   send_message_to_seller,
+  updateMessage,
 } from "../../../store/Reducers/chatReducer";
 import toast from "react-hot-toast";
-const socket = io("http://localhost:5000");
+import socket from "./../../../utils/socket";
 
 function Chat() {
   const dispatch = useDispatch();
+  const scrollRef = useRef();
 
   const { sellerId } = useParams();
 
   const { customerInfo } = useSelector((state) => state.customer);
 
-  const { customer_side, customer_current_friend, customer_side_messages } =
-    useSelector((state) => state.chat);
+  const {
+    customer_side,
+    customer_current_friend,
+    customer_side_messages,
+    successMessage,
+  } = useSelector((state) => state.chat);
 
   const [sendText, setSendText] = useState("");
+  const [messageSocket, setMessageSocket] = useState("");
+  const [activeSeller, setActiveSeller] = useState([]);
 
   useEffect(
     function () {
@@ -57,6 +66,55 @@ function Chat() {
     setSendText("");
   }
 
+  useEffect(
+    function () {
+      if (successMessage) {
+        socket.emit(
+          "send_customer_message",
+          customer_side_messages[customer_side_messages.length - 1]
+        );
+
+        dispatch(messageClear());
+      }
+    },
+    [successMessage, customer_side_messages, dispatch]
+  );
+
+  useEffect(function () {
+    socket.on("seller_message", (messages) => {
+      setMessageSocket(messages);
+    });
+    socket.on("activeSeller", (sellers) => {
+      setActiveSeller(sellers);
+    });
+  }, []);
+
+  useEffect(
+    function () {
+      if (messageSocket) {
+        if (
+          sellerId === messageSocket.senderId &&
+          customerInfo.id === messageSocket.receivewId
+        ) {
+          dispatch(updateMessage(messageSocket));
+        } else {
+          toast.success(`A message from ${messageSocket.senderName}`, {
+            autoClose: 1500,
+          });
+          dispatch(messageClear());
+        }
+      }
+    },
+    [messageSocket, customerInfo, sellerId, dispatch]
+  );
+
+  useEffect(
+    function () {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    },
+    [customer_side_messages]
+  );
+
   return (
     <div className="bg-white p-3 rounded-md">
       <div className="w-full flex">
@@ -69,18 +127,26 @@ function Chat() {
           </div>
           <div className="w-full flex flex-col text-slate-600 py-4 h-[400px] pr-3 gap-3">
             {customer_side?.map((each, index) => (
-              <Link
+              <NavLink
                 key={index}
                 to={`/customerDashboard/chat/${each.fbId}`}
-                className={`flex gap-2 justify-start items-center pl-2 py-[5px] hover:bg-indigo-300`}
+                className={({ isActive }) =>
+                  `flex gap-2 justify-start items-center pl-2 py-[5px] hover:bg-blue-300 rounded-md ${
+                    isActive ? "bg-blue-300 rounded-md" : ""
+                  }`
+                }
               >
                 <div className="w-[30px] h-[30px] rounded-full relative">
-                  <div className="w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0"></div>
+                  {activeSeller.some(
+                    (activeSeller, index) => activeSeller.sellerId === each.fbId
+                  ) && (
+                    <div className="w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0"></div>
+                  )}
 
                   <img src={each.image} alt="" />
                 </div>
                 <span>{each.name}</span>
-              </Link>
+              </NavLink>
             ))}
           </div>
         </div>
@@ -89,7 +155,12 @@ function Chat() {
             <div className="w-full h-full">
               <div className="flex justify-start gap-3 items-center text-slate-600 text-xl h-[50px]">
                 <div className="w-[30px] h-[30px] rounded-full relative">
-                  <div className="w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0"></div>
+                  {activeSeller.some(
+                    (each, index) =>
+                      each.sellerId === customer_current_friend.fbId
+                  ) && (
+                    <div className="w-[10px] h-[10px] rounded-full bg-green-500 absolute right-0 bottom-0"></div>
+                  )}
 
                   <img src={customer_current_friend.image} alt="" />
                 </div>
@@ -102,7 +173,8 @@ function Chat() {
                       return (
                         <div
                           key={index}
-                          className="w-full flex gap-2 justify-start items-center text-[14px]"
+                          className="w-full flex gap-2 justify-end items-center text-[14px]"
+                          ref={scrollRef}
                         >
                           <img
                             className="w-[30px] h-[30px]"
@@ -118,7 +190,8 @@ function Chat() {
                       return (
                         <div
                           key={index}
-                          className="w-full flex gap-2 justify-end items-center text-[14px]"
+                          className="w-full flex gap-2 justify-start items-center text-[14px]"
+                          ref={scrollRef}
                         >
                           <img
                             className="w-[30px] h-[30px]"

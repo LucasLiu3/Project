@@ -6,7 +6,7 @@ const chatMessageSchema = new Schema(
     senderId: { type: String, required: true },
     receivewId: { type: String, required: true },
     messages: { type: String, required: true },
-    status: { type: String, status: "unseen" },
+    status: { type: String, default: "unseen" },
   },
   { timestamps: true }
 );

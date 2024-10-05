@@ -26,6 +26,7 @@ const SellerOrderDetails = lazy(() =>
 );
 const SellerPending = lazy(() => import("../../views/seller/SellerPending"));
 const SellerDeactive = lazy(() => import("../../views/seller/SellerDeactive"));
+const StripeAccount = lazy(() => import("../../views/seller/StripeAccount"));
 
 const sellerRoutes = [
   {
@@ -87,6 +88,13 @@ const sellerRoutes = [
     status: "active",
   },
   {
+    path: "/seller/customer_chat/:customerId",
+    element: <SellerChatCustomer></SellerChatCustomer>,
+    role: "seller",
+    status: "active",
+  },
+
+  {
     path: "/seller/admin_chat",
     element: <SellerChatAdmin></SellerChatAdmin>,
     role: "seller",
@@ -95,6 +103,12 @@ const sellerRoutes = [
   {
     path: "/seller/profile",
     element: <SellerProfile></SellerProfile>,
+    role: "seller",
+    visibility: ["active", "deactive", "pending"],
+  },
+  {
+    path: "/success?",
+    element: <StripeAccount></StripeAccount>,
     role: "seller",
     status: "active",
   },
