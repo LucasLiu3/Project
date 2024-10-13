@@ -1,14 +1,14 @@
 import { NavLink } from "react-router-dom";
 
-function ChatList({ customers }) {
+function ChatList({ customers, activeCustomer }) {
   return (
     <>
       {customers.map((each, index) => (
         <NavLink
           key={index}
           className={({ isActive }) =>
-            `h-[60px] flex justify-start gap-2 items-center text-white px-2 py-2 rounded-md cursor-pointer 
-             ${isActive ? "bg-[#8288ed]" : "bg-transparent"}`
+            `h-[60px] flex justify-start gap-2 items-center text-[#212529] px-2 py-2 rounded-md cursor-pointer 
+             ${isActive ? "bg-indigo-300" : ""}`
           }
           to={`/seller/customer_chat/${each.fbId}`}
         >
@@ -18,7 +18,10 @@ function ChatList({ customers }) {
               src={each.image || "http://localhost:3000/images/admin.jpg"}
               alt=""
             />
-            <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+
+            {activeCustomer.some((i) => i.customerId === each.fbId) && (
+              <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+            )}
           </div>
 
           <div className="flex justify-center items-start flex-col w-full">

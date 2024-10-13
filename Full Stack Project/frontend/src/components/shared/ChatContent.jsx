@@ -1,14 +1,13 @@
 import { useEffect, useRef } from "react";
 
-function ChatContent({ messages, customerId }) {
+function ChatContent({ messages, customerId, userInfo }) {
   const scrollRef = useRef();
 
-  useEffect(
-    function () {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    },
-    [messages]
-  );
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [messages]);
   return (
     <div className="mt-3">
       {customerId ? (
@@ -28,7 +27,7 @@ function ChatContent({ messages, customerId }) {
                       alt=""
                     />
                   </div>
-                  <div className="flex justify-center items-start flex-col w-full bg-blue-500 shadow-lg shadow-blue-500/50 text-white py-1 px-2 rounded-sm">
+                  <div className="flex justify-center items-start flex-col w-full bg-white  text-[#212529] py-2 px-3 rounded-md">
                     <span>{each.messages}</span>
                   </div>
                 </div>
@@ -42,13 +41,13 @@ function ChatContent({ messages, customerId }) {
                 ref={scrollRef}
               >
                 <div className="flex justify-start items-start gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-                  <div className="flex justify-center items-start flex-col w-full bg-red-500 shadow-lg shadow-red-500/50 text-white py-1 px-2 rounded-sm">
+                  <div className="flex justify-center items-start flex-col w-full bg-green-500  text-[#212529] py-2 px-3 rounded-md">
                     <span>{each.messages}</span>
                   </div>
                   <div>
                     <img
                       className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
-                      src="http://localhost:3000/images/admin.jpg"
+                      src={userInfo.image}
                       alt=""
                     />
                   </div>

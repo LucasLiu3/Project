@@ -19,7 +19,7 @@ function Filter({ perPage, setPerPage, setSearchContent }) {
         name="search"
         placeholder="search..."
         className="h-[40px] px-3 py-2 rounded-md bg-[#b1addf] 
-      border bg-transparent border-slate-700 text-white focus:border-indigo-700 
+      border bg-transparent border-slate-700 text-[#212529] focus:border-indigo-700 
       overflow-hidden outline-none placeholder-bold "
         onChange={(e) => setSearchContent(e.target.value)}
       />

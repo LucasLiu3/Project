@@ -209,9 +209,11 @@ function Shipping() {
                               {product.productsInCart[0].discount ? (
                                 <h2 className="text-lg text-red-500">
                                   $
-                                  {product.productsInCart[0].price *
+                                  {(
+                                    product.productsInCart[0].price *
                                     (1 -
-                                      product.productsInCart[0].discount / 100)}
+                                      product.productsInCart[0].discount / 100)
+                                  ).toFixed(2)}
                                 </h2>
                               ) : (
                                 ""

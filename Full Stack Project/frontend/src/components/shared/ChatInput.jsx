@@ -26,7 +26,7 @@ function ChatInput({ userInfo, customerId }) {
   return (
     <form onSubmit={send} className="flex gap-3">
       <input
-        className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#d0d2d6]"
+        className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#212529]"
         type="text"
         placeholder="Input Your Message"
         value={sendText}

@@ -288,7 +288,7 @@ class authControllers {
           sellerId: new Object(id),
         })
         .countDocuments();
-      console.log("1");
+
       const totalOrder = await adminOrder
         .find({ sellerId: new Object(id) })
         .countDocuments();
@@ -308,18 +308,15 @@ class authControllers {
         })
         .countDocuments();
 
-      console.log("3");
       const messages = await chatMessagesModel
         .find({ receivewId: { $eq: new Object(id) } })
         .sort({ createdAt: -1 })
         .limit(3);
 
-      console.log("4");
       const recentOrder = await adminOrder
         .find({ sellerId: new Object(id) })
         .sort({ createdAt: -1 })
         .limit(5);
-      console.log("5");
       return responseReturn(res, 201, {
         totalProduct,
         totalOrder,

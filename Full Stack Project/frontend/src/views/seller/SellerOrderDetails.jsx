@@ -58,9 +58,9 @@ function SellerOrderDetails() {
   );
 
   return (
-    <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
+    <div className="w-full p-4 bg-[#f8f9fa] rounded-md">
       <div className="flex justify-between items-center p-4">
-        <h2 className="text-xl text-[#d0d2d6]">Order Details</h2>
+        <h2 className="text-xl text-[#212529]">Order Details</h2>
 
         <AdminOrderSelect
           orderState={orderState}
@@ -70,9 +70,12 @@ function SellerOrderDetails() {
 
       <div className="p-4 ">
         <div className="flex mb-20  ">
-          <AdminOrderDetailsCard orders={oneOrder}></AdminOrderDetailsCard>
+          <AdminOrderDetailsCard
+            orders={oneOrder}
+            ordersDetail={ordersDetail}
+          ></AdminOrderDetailsCard>
 
-          <div className="w-[65%] bg-[#8288ed] rounded-md">
+          <div className="w-[65%] bg-[#e9ecef] rounded-md">
             <div className="flex flex-col pl-6 mb-5 ">
               <AdminOrderDetailsItem
                 ordersDetail={ordersDetail}

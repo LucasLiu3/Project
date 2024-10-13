@@ -21,8 +21,8 @@ function AdminSellerDetails() {
   );
 
   return (
-    <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
-      <div className="flex flex-warp text-[#d0d2d6] lg:gap-0 md:gap-9">
+    <div className="w-full p-4 bg-[#f8f9fa] rounded-md">
+      <div className="flex flex-warp text-[#212529] lg:gap-0 md:gap-9">
         <AdminSellerDetailHeader image={seller.image}></AdminSellerDetailHeader>
 
         <div className="w-4/12">

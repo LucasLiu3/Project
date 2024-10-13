@@ -257,15 +257,23 @@ function ProductSearch() {
                 </div>
 
                 <div className="pb-8">
-                  <div className="w-full grid grid-cols-3 gap-3">
-                    {productsAllShow.map((c, i) => (
-                      <ProductCard
-                        rating={c.rating}
-                        key={i}
-                        product={c}
-                      ></ProductCard>
-                    ))}
-                  </div>
+                  {productsAllShow.length > 0 ? (
+                    <div className="w-full grid grid-cols-3 gap-3">
+                      {productsAllShow.map((c, i) => (
+                        <ProductCard
+                          rating={c.rating}
+                          key={i}
+                          product={c}
+                        ></ProductCard>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="w-full flex justify-center items-center">
+                      <span className="text-2xl font-bold">
+                        No Product Found!
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex justify-end">

@@ -43,13 +43,13 @@ function NewProductImage({
   }
 
   function removeImage(index) {
-    if (index < oldImages.length) {
-      // Removing an old image
-      setOldImages(oldImages.filter((_, i) => i !== index));
-    } else {
-      // Removing a new image
-      const newIndex = index - oldImages.length;
-      setNewImages(newImages.filter((_, i) => i !== newIndex));
+    if (oldImages?.length > 0) {
+      if (index < oldImages?.length) {
+        setOldImages(oldImages.filter((_, i) => i !== index));
+      } else {
+        const newIndex = index - oldImages.length;
+        setNewImages(newImages.filter((_, i) => i !== newIndex));
+      }
     }
 
     const filterImage = images.filter((each, i) => i !== index);

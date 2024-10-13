@@ -258,7 +258,7 @@ function ProductDetail() {
               </div>
 
               <div className="flex gap-3 pb-10 borard-b">
-                {productDetail.stock > 1 ? (
+                {productDetail.stock >= 1 ? (
                   <>
                     <div className="flex bg-slate-200 h-[40px] justify-center items-center text-xl">
                       <div
@@ -298,7 +298,7 @@ function ProductDetail() {
               </div>
 
               <div className="flex gap-3">
-                {productDetail.stock ? (
+                {productDetail.stock >= 1 ? (
                   <button
                     onClick={buyNow}
                     className="px-8 py-3 h-[50px] cursor-pointer hover:shadow-lg hover:shadow-green-500/40 bg-[#247462] text-white"

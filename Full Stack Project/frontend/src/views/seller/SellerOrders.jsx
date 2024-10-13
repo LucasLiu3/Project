@@ -33,8 +33,19 @@ function SellerOrders() {
     [userInfo, dispatch]
   );
 
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+
+  let showOrders = orders.slice(startIndex, endIndex);
+
+  if (searchContent) {
+    showOrders = showOrders.filter(
+      (each) => each._id.toLowerCase().indexOf(searchContent.toLowerCase()) > -1
+    );
+  }
+
   return (
-    <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
+    <div className="w-full p-4 bg-[#f8f9fa] rounded-md">
       <Filter
         perPage={perPage}
         setPerPage={setPerPage}
@@ -42,27 +53,35 @@ function SellerOrders() {
       ></Filter>
 
       <div className="relative mt-5 overflow-y-auto">
-        <table className="w-full text-sm text-[#d0d2d6]">
+        <table className="w-full text-sm text-[#212529]">
           <thead className=" uppercase border-b border-slate-700">
             <HeadModule headerTitle={headerTitle}></HeadModule>
           </thead>
 
           <tbody>
-            <ContentModule
-              data={orders}
-              content="order"
-              role="seller"
-            ></ContentModule>
+            {showOrders.length > 0 ? (
+              <ContentModule
+                data={showOrders}
+                content="order"
+                role="seller"
+              ></ContentModule>
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center py-4">
+                  <span className="text-2xl font-bold">No Product Found!</span>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
 
-      <div className="w-full flex justify-end mt-4 mr-4 bottom-4 right-4">
+      <div className="w-full flex justify-end mt-4 mr-4 pr-10 bottom-4 right-4">
         <Pagination
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           perPage={perPage}
-          totalItem={orders.length}
+          totalItem={searchContent === "" ? orders.length : showOrders.length}
           showPageNmber={3}
         ></Pagination>
       </div>

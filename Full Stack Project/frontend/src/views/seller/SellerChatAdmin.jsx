@@ -18,6 +18,7 @@ function SellerChatAdmin() {
     seller_admin_message,
     currentSeller,
     successMessage,
+    activeAdmin,
   } = useSelector((state) => state.chatIn);
 
   const dispatch = useDispatch();
@@ -59,13 +60,15 @@ function SellerChatAdmin() {
 
   useEffect(
     function () {
-      scrollref.current?.scrollIntoView({ behavior: "smooth" });
+      if (scrollref.current) {
+        scrollref.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
     },
     [seller_admin_message]
   );
 
   return (
-    <div className="w-full bg-[#6a5fdf] px-4 py-4 rounded-md h-[calc(100vh-140px)]">
+    <div className="w-full bg-[#f8f9fa] px-4 py-4 rounded-md h-[calc(100vh-140px)]">
       <div className="flex w-full h-full relative">
         <div className="w-full  md:pl-4">
           <div className="flex justify-between items-center">
@@ -73,19 +76,45 @@ function SellerChatAdmin() {
               <div className="relative flex">
                 <img
                   className="w-[45px] h-[45px] border-green-500 border-2 max-w-[45px] p-[2px] rounded-full"
-                  src="http://localhost:3000/images/admin.jpg"
+                  src="http://localhost:3000/images/admin.png"
                   alt=""
                 />
-                <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+                {Object.keys(activeAdmin).length !== 0 && (
+                  <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+                )}
               </div>
               <div>Admin</div>
             </div>
           </div>
 
           <div className="py-4">
-            <div className="bg-[#475569] h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
+            <div className="bg-slate-300 h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
               {seller_admin_message.map((each, index) => {
                 if (each.senderId === userInfo._id) {
+                  return (
+                    <div
+                      className="w-full flex justify-end items-center"
+                      key={index}
+                      ref={scrollref}
+                    >
+                      <div className="flex justify-start items-start gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
+                        <div className="flex justify-center items-start flex-col w-full bg-green-500 shadow-lg text-[#212529] py-2 px-3 rounded-md">
+                          <span>{each.message}</span>
+                        </div>
+                        <div>
+                          <img
+                            className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
+                            src={
+                              userInfo.image ||
+                              "http://localhost:3000/images/image/register.jpg"
+                            }
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                } else {
                   return (
                     <div
                       className="w-full flex justify-start items-center"
@@ -96,33 +125,12 @@ function SellerChatAdmin() {
                         <div>
                           <img
                             className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
-                            src="http://localhost:3000/images/admin.jpg"
+                            src="http://localhost:3000/images/admin.png"
                             alt=""
                           />
                         </div>
-                        <div className="flex justify-center items-start flex-col w-full bg-blue-500 shadow-lg shadow-blue-500/50 text-white py-1 px-2 rounded-sm">
+                        <div className="flex justify-center items-start flex-col w-full bg-white  text-[#212529] py-2 px-3 rounded-md">
                           <span>{each.message}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div
-                      className="w-full flex justify-end items-center"
-                      key={index}
-                      ref={scrollref}
-                    >
-                      <div className="flex justify-start items-start gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-                        <div className="flex justify-center items-start flex-col w-full bg-red-500 shadow-lg shadow-red-500/50 text-white py-1 px-2 rounded-sm">
-                          <span>{each.message}</span>
-                        </div>
-                        <div>
-                          <img
-                            className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
-                            src="http://localhost:3000/images/admin.jpg"
-                            alt=""
-                          />
                         </div>
                       </div>
                     </div>
@@ -134,7 +142,7 @@ function SellerChatAdmin() {
 
           <form onSubmit={sendText} className="flex gap-3">
             <input
-              className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#d0d2d6]"
+              className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#212529]"
               type="text"
               placeholder="Input Your Message"
               value={text}

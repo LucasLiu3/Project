@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 
 function DashboardMessage({ role, recentMessage }) {
   return (
-    <div className="w-full bg-[#6a5fdf] p-4 rounded-md text-[#d0d2d6]">
+    <div className="w-full bg-[#f8f9fa] p-4 rounded-md text-[#000]">
       <div className="flex justify-between items-center font-semibold pb-3">
         <h2 className=" text-lg">Recent Messages</h2>
-        <Link className="text-sm">View all</Link>
+        <Link
+          className="text-sm"
+          to={role === "seller" ? "/seller/customer_chat" : "/admin/chat"}
+        >
+          View all
+        </Link>
       </div>
 
       <div className="flex flex-col gap-2 pt-6">
@@ -21,7 +26,7 @@ function DashboardMessage({ role, recentMessage }) {
                 />
               </div>
 
-              <div className="p-3 bg-slate-800 rounded-lg border border-slate-500 shadow-sm">
+              <div className="p-3 bg-[#2f9e44] rounded-lg border border-slate-500 shadow-sm">
                 <div className="flex justify-between items-center mb-2">
                   <Link className="text-md font-normal">
                     {role === "admin" ? each.senderName : each.senderName}
@@ -31,7 +36,7 @@ function DashboardMessage({ role, recentMessage }) {
                   </time>
                 </div>
 
-                <div className="p-2 text-xs font-normal bg-slate-500 rounded-lg border-slate-800">
+                <div className="p-2 text-xs font-normal bg-slate-100 rounded-lg border-slate-800">
                   {each.message || each.messages}
                 </div>
               </div>

@@ -18,7 +18,7 @@ root.render(
 
         <Toaster
           toastOptions={{
-            position: "top-center",
+            position: "top-right",
             style: {
               background: "#283046",
               color: "white",

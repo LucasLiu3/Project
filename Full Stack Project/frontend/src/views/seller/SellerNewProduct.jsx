@@ -89,15 +89,15 @@ function SellerNewProduct() {
   }, [successMessage, errorMessage, dispatch]);
 
   return (
-    <div className="w-full bg-[#6a5fdf] rounded-md p-4">
+    <div className="w-full bg-[#f8f9fa] rounded-md p-4">
       <div className="flex justify-between items-center pb-4">
-        <h1 className="text-lx font-semibold text-[#d0d2d6]">
+        <h1 className="text-lx font-semibold text-[#212529]">
           Add New Product
         </h1>
 
         <Link
           to="/seller/products"
-          className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-md px-7 py-2 "
+          className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-[#212529] rounded-md px-7 py-2 "
         >
           All Product
         </Link>
@@ -111,7 +111,7 @@ function SellerNewProduct() {
             setFormInfo={setFormInfo}
           ></NewProductForm>
 
-          <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4 mt-5">
+          <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#212529] mb-4 mt-5">
             <NewProductImage
               imageShow={imageShow}
               setImages={setImages}
@@ -121,7 +121,13 @@ function SellerNewProduct() {
           </div>
 
           <div className="mt-5 flex">
-            <Button>{loader ? <PropagateLoader /> : "Add Product"}</Button>
+            <Button>
+              {loader ? (
+                <PropagateLoader className="px-7 py-2" />
+              ) : (
+                "Add Product"
+              )}
+            </Button>
           </div>
         </form>
       </div>

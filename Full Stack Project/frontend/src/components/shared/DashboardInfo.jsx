@@ -40,7 +40,7 @@ function DashboardInfo({
     },
     {
       title: `${role === "seller" ? "Pending Orders" : "Total Orders"}`,
-      number: totalPendingOrder,
+      number: `${role === "seller" ? totalPendingOrder : totalOrder}`,
       icon: <IoCartOutline></IoCartOutline>,
       bgColor: "#ecebff",
       textColor: "#5c5a5a",

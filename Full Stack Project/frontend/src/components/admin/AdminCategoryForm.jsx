@@ -54,8 +54,8 @@ function AdminCategoryForm() {
 
   return (
     <div
-      className="rounded-md bg-[#6a5fdf] h-screen lg:h-auto px-3 py-2 
-      lg:rounded-md text-[#d0d2d6] sm:h-full ]"
+      className="rounded-md bg-[#f8f9fa] h-screen lg:h-auto px-3 py-2 
+      lg:rounded-md text-[#212529] sm:h-full ]"
     >
       <h1 className="text-center font-semibold text-xl mb-4 w-full sm:pt-5">
         Add Category
@@ -69,8 +69,8 @@ function AdminCategoryForm() {
             type="text"
             id="name"
             name="category_name"
-            className="h-[40px] px-3 py-2 mt-2 rounded-md bg-[#b1addf] 
-              border bg-transparent border-slate-700 text-white focus:border-indigo-700 
+            className="h-[40px] px-3 py-2 mt-2 rounded-md bg-[#f8f9fa] 
+              border bg-transparent border-slate-700 text-[#212529] focus:border-indigo-700 
               overflow-hidden outline-none placeholder-bold "
             onChange={(e) =>
               setNewCategory({ ...newCategory, name: e.target.value })

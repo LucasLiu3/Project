@@ -3,10 +3,10 @@ import { FaRegEdit } from "react-icons/fa";
 function SellerProfileInfo({ userInfo, updatePayment }) {
   return (
     <div className="px-0 md:px-5 py-2">
-      <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-slate-800 rounded-md relative">
-        <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
+      <div className="flex justify-between text-sm flex-col gap-2 p-4 bg-slate-300 rounded-md relative">
+        {/* <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
           <FaRegEdit />{" "}
-        </span>
+        </span> */}
         <div className="flex gap-2">
           <span>Name : </span>
           <span>{userInfo.name}</span>
@@ -28,7 +28,7 @@ function SellerProfileInfo({ userInfo, updatePayment }) {
                 {userInfo.status}
               </span>
             ) : (
-              <span className="bg-slate-300 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
+              <span className="bg-red-500 text-white text-xs cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">
                 Pending
               </span>
             )}

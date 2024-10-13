@@ -179,9 +179,11 @@ class paymentControllers {
 
   admin_get_withdraw = async (req, res) => {
     try {
-      const withdrawRequest = await sellerWithdrawModel.find({
-        status: "pending",
-      });
+      const withdrawRequest = await sellerWithdrawModel
+        .find({
+          status: "pending",
+        })
+        .sort({ createdAt: -1 });
 
       return responseReturn(res, 200, {
         withdrawRequest,

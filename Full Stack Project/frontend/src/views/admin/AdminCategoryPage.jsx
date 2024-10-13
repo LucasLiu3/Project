@@ -46,7 +46,7 @@ function AdminCategoryPage() {
 
   return (
     <div className=" flex flex-wrap w-full">
-      <div className="w-full lg:w-7/12 lg:pr-3 bg-[#6a5fdf] rounded-md p-4">
+      <div className="w-full lg:w-7/12 lg:pr-3 bg-[#f8f9fa] rounded-md p-4">
         <Filter
           perPage={perPage}
           setPerPage={setPerPage}
@@ -54,7 +54,7 @@ function AdminCategoryPage() {
         ></Filter>
 
         <div className="relative overflow-y-auto pt-4 ">
-          <table className="w-full text-sm text-[#d0d2d6] ">
+          <table className="w-full text-sm text-[#212529] ">
             <thead className="py-3 px-4 uppercase border-b border-slate-700">
               <HeadModule headerTitle={headerTitle}></HeadModule>
             </thead>

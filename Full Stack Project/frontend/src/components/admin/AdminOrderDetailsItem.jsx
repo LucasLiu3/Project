@@ -2,7 +2,7 @@ function AdminOrderDetailsItem({ ordersDetail, role = "admin" }) {
   if (role === "seller") {
     return (
       <>
-        <div className="text-[#d0d2d6] mt-5">
+        <div className="text-[#212529] mt-5">
           <h2 className="text-xl font-bold">
             Order Status: {ordersDetail.delivery_status}
           </h2>
@@ -13,7 +13,7 @@ function AdminOrderDetailsItem({ ordersDetail, role = "admin" }) {
             <div className="flex flex-col">
               <span>Brand Name : {p.brand}</span>
               <span>
-                Price: {(p.price * ((100 - p.discount) / 100)).toFixed(2)}
+                Price: $ {(p.price * ((100 - p.discount) / 100)).toFixed(2)}
               </span>
               <span>Quantity: {p.quantity}</span>
             </div>
@@ -26,7 +26,7 @@ function AdminOrderDetailsItem({ ordersDetail, role = "admin" }) {
   return (
     <>
       {ordersDetail.map((each, index) => (
-        <div className="text-[#d0d2d6] mt-5" key={index}>
+        <div className="text-[#212529] mt-5" key={index}>
           <h2>
             {each.product[0].shopName} Order: {each.delivery_status}
           </h2>

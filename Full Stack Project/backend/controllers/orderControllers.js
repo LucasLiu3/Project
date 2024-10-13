@@ -118,7 +118,7 @@ class orderControllers {
 
       setTimeout(() => {
         this.paymentCheck(order.id);
-      }, 100000);
+      }, 30000);
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -226,7 +226,9 @@ class orderControllers {
 
   get_orders_admin = async (req, res) => {
     try {
-      const orders = await customerOrder.find().sort({ createdAt: -1 });
+      const orders = await customerOrder
+        .find({ payment_status: "paid" })
+        .sort({ createdAt: -1 });
 
       return responseReturn(res, 200, {
         orders,
@@ -260,7 +262,7 @@ class orderControllers {
 
     try {
       const orders = await adminOrder
-        .find({ sellerId: sellerId })
+        .find({ sellerId: sellerId, payment_status: "paid" }) // 添加 payment_status 条件
         .sort({ createdAt: -1 });
 
       return responseReturn(res, 200, {

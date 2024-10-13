@@ -23,7 +23,7 @@ function DashoboardChart({ role }) {
       },
       chart: {
         background: "transparent",
-        foreColor: "#d0d2d6",
+        foreColor: "#000",
       },
       dataLabels: {
         enabled: false,
@@ -32,7 +32,7 @@ function DashoboardChart({ role }) {
         show: true,
         curve: ["smooth", "straight", "stepline"],
         lineCap: "butt",
-        colors: "#f0f0f0",
+        colors: "#000",
         width: 0.5,
         dashArray: 0,
       },

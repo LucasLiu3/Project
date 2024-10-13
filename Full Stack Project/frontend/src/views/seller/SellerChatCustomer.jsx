@@ -26,12 +26,16 @@ function SellerChatCustomer() {
 
   const { customerId } = useParams();
 
-  const { messages, customers, currentCustomer, successMessage } = useSelector(
-    (state) => state.chatIn
-  );
+  const {
+    messages,
+    customers,
+    currentCustomer,
+    successMessage,
+    activeCustomer,
+  } = useSelector((state) => state.chatIn);
 
-  const [messageSocket, setMessageSocket] = useState("");
-  const [activeCustomer, setActiveCustomer] = useState([]);
+  // const [messageSocket, setMessageSocket] = useState("");
+  // const [activeCustomer, setActiveCustomer] = useState([]);
 
   useEffect(
     function () {
@@ -49,14 +53,20 @@ function SellerChatCustomer() {
     [customerId, dispatch]
   );
 
+  const filter = activeCustomer.some((each) => each.customerId === customerId);
+
   useEffect(
     function () {
       if (successMessage) {
-        socket.emit("send_seller_message", messages[messages.length - 1]);
-        dispatch(messageClear());
+        if (filter) {
+          socket.emit("send_seller_message", messages[messages.length - 1]);
+          dispatch(messageClear());
+        } else {
+          dispatch(messageClear());
+        }
       }
     },
-    [successMessage, messages, dispatch]
+    [successMessage, messages, dispatch, filter]
   );
 
   // useEffect(function () {
@@ -88,7 +98,7 @@ function SellerChatCustomer() {
   // }, []);
 
   return (
-    <div className="w-full bg-[#6a5fdf] px-4 py-4 rounded-md h-[calc(100vh-140px)]">
+    <div className="w-full bg-[#f8f9fa] px-4 py-4 rounded-md h-[calc(100vh-140px)]">
       <div className="flex w-full h-full relative">
         <div
           className={`w-[280px] h-full absolute z-10 ${
@@ -96,7 +106,7 @@ function SellerChatCustomer() {
           } md:left-0 md:relative transition-all `}
         >
           <div className="w-full h-[calc(100vh-177px)] bg-[#9e97e9] md:bg-transparent overflow-y-auto">
-            <div className="flex text-xl justify-between items-center p-4 md:p-0 md:px-3 md:pb-3 text-white">
+            <div className="flex text-xl justify-between items-center p-4 md:p-0 md:px-3 md:pb-3 text-[#212529]">
               <h2>Customers</h2>
               <span
                 onClick={() => setShow(!show)}
@@ -106,8 +116,11 @@ function SellerChatCustomer() {
               </span>
             </div>
 
-            <div className="mt-5">
-              <ChatList customers={customers}></ChatList>
+            <div className="mt-5 ">
+              <ChatList
+                customers={customers}
+                activeCustomer={activeCustomer}
+              ></ChatList>
             </div>
           </div>
         </div>
@@ -118,6 +131,7 @@ function SellerChatCustomer() {
               <ChatTo
                 currentCustomer={currentCustomer}
                 customerId={customerId}
+                activeCustomer={activeCustomer}
               ></ChatTo>
             )}
 
@@ -132,10 +146,11 @@ function SellerChatCustomer() {
           </div>
 
           <div className="py-4">
-            <div className="bg-[#475569] h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
+            <div className="bg-slate-300 h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
               <ChatContent
                 messages={messages}
                 customerId={customerId}
+                userInfo={userInfo}
                 // ref={scrollRef}
               ></ChatContent>
             </div>

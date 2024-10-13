@@ -44,7 +44,7 @@ function AdminSellerForm({ seller, sellerID }) {
       <form onSubmit={updateStatus}>
         <div className="flex gap-4 py-3">
           <select
-            className="px-4 py-2 focus:border-slate-700 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]"
+            className="px-4 py-2 focus:border-slate-700 outline-none bg-[#f8f9fa]  border border-slate-700 rounded-md text-[#212529]"
             name=""
             id=""
             value={status}

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { get_order_detail } from "../../../store/Reducers/CustomerDashboardReducer";
 
 function OrderDetail() {
@@ -9,6 +9,53 @@ function OrderDetail() {
   const { orderDetail } = useSelector((state) => state.customerDashboard);
 
   const dispatch = useDispatch();
+
+  const [timeLeft, setTimeLeft] = useState(null);
+
+  const PAYMENT_DEADLINE = 30;
+
+  useEffect(() => {
+    if (
+      orderDetail.payment_status === "unpaid" &&
+      orderDetail.delivery_status !== "cancelled"
+    ) {
+      if (orderDetail && orderDetail.createdAt) {
+        const orderCreatedTime = new Date(orderDetail.createdAt).getTime();
+        const currentTime = new Date().getTime();
+        const timeElapsed = Math.floor((currentTime - orderCreatedTime) / 1000);
+
+        const remainingTime = PAYMENT_DEADLINE - timeElapsed;
+        if (remainingTime > 0) {
+          setTimeLeft(remainingTime);
+        } else {
+          dispatch(get_order_detail(orderId));
+          return;
+        }
+
+        const timer = setInterval(() => {
+          setTimeLeft((prev) => {
+            if (prev > 1) {
+              return prev - 1;
+            } else {
+              clearInterval(timer);
+              dispatch(get_order_detail(orderId));
+              return 0;
+            }
+          });
+        }, 1000);
+
+        return () => clearInterval(timer);
+      }
+    }
+  }, [orderDetail, orderId, dispatch]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
+  };
 
   useEffect(
     function () {
@@ -59,7 +106,17 @@ function OrderDetail() {
             Total Price: ${orderDetail.price} (Inc Shipping Fee)
           </p>
         </div>
+
         <div className="flex flex-col gap-2 mr-20">
+          {orderDetail.payment_status === "unpaid" &&
+            orderDetail.delivery_status !== "cancelled" && (
+              <div className="mt-4">
+                <h2 className="text-red-600 text-lg">
+                  Time left to pay:{" "}
+                  {timeLeft !== null ? formatTime(timeLeft) : "N/A"}
+                </h2>
+              </div>
+            )}
           <h2 className="text-lg">Shipping Info</h2>
           <div className="flex flex-col gap-1">
             <span>Name: {orderDetail.shippingInfo.name}</span>
@@ -72,6 +129,7 @@ function OrderDetail() {
           </div>
         </div>
       </div>
+
       <div className="mt-4">
         <h2 className="text-slate-600 text-lg pb-2 font-sans font-bold">
           Order Products

@@ -47,9 +47,14 @@ function AdminPaymentRequest() {
     dispatch(admin_approve_withdraw(requestId));
   }
 
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+
+  let showPayments = pendingPayment.slice(startIndex, endIndex);
+
   return (
-    <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
-      <h2 className="text-xl font-medium pb-5 text-[#d0d2d6]">
+    <div className="w-full p-4 bg-[#f8f9fa] rounded-md">
+      <h2 className="text-xl font-medium pb-5 text-[#212529]">
         Withdrawal Request
       </h2>
 
@@ -60,17 +65,25 @@ function AdminPaymentRequest() {
       ></Filter>
 
       <div className="relative mt-5 overflow-y-auto">
-        <table className="w-full text-sm text-[#d0d2d6]">
+        <table className="w-full text-sm text-[#212529]">
           <thead className=" uppercase border-b border-slate-700">
             <HeadModule headerTitle={headTitle}></HeadModule>
           </thead>
 
           <tbody>
-            <ContentModule
-              data={pendingPayment}
-              content="payment"
-              approvelRequest={approvelRequest}
-            ></ContentModule>
+            {showPayments.length > 0 ? (
+              <ContentModule
+                data={showPayments}
+                content="payment"
+                approvelRequest={approvelRequest}
+              ></ContentModule>
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center py-4">
+                  <span className="text-2xl font-bold">No Product Found!</span>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -80,7 +93,7 @@ function AdminPaymentRequest() {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           perPage={perPage}
-          totalItem={35}
+          totalItem={pendingPayment.length}
           showPageNmber={3}
         ></Pagination>
       </div>

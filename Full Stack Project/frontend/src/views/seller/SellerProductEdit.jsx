@@ -76,7 +76,6 @@ function SellerProductEdit() {
 
     const formData = new FormData();
 
-    // 添加文本字段
     formData.append("product", formInfo.product);
     formData.append("brand", formInfo.brand);
     formData.append("category", formInfo.category);
@@ -87,23 +86,25 @@ function SellerProductEdit() {
     formData.append("productId", productId);
     formData.append("oldImages", oldImages);
 
-    for (let i = 0; i < newImages[0].length; i++) {
-      formData.append("newImages", newImages[0][i]);
+    if (newImages[0]?.length > 0) {
+      for (let i = 0; i < newImages[0].length; i++) {
+        formData.append("newImages", newImages[0][i]);
+      }
     }
 
     dispatch(updateProduct(formData));
   }
 
   return (
-    <div className="w-full bg-[#6a5fdf] rounded-md p-4">
+    <div className="w-full bg-[#f8f9fa] rounded-md p-4">
       <div className="flex justify-between items-center pb-4">
-        <h1 className="text-lx font-semibold text-[#d0d2d6]">
+        <h1 className="text-lx font-semibold text-[#212529]">
           Add New Product
         </h1>
 
         <Link
           to="/seller/products"
-          className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-white rounded-md px-7 py-2 "
+          className="bg-blue-500 hover:shadow-blue-500/50 hover:shadow-lg text-[#212529] rounded-md px-7 py-2 "
         >
           All Product
         </Link>
@@ -116,7 +117,8 @@ function SellerProductEdit() {
             setFormInfo={setFormInfo}
             categoryName={categoryName}
           ></NewProductForm>
-          <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4 mt-5">
+
+          <div className="grid lg:grid-cols-8 grid-cols-1 md:grid-cols-4 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#212529] mb-4 mt-5">
             <NewProductImage
               imageShow={imageShow}
               setImages={setImages}

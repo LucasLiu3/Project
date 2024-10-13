@@ -33,12 +33,12 @@ function Chat() {
   const [messageSocket, setMessageSocket] = useState("");
   const [activeSeller, setActiveSeller] = useState([]);
 
-  useEffect(
-    function () {
-      socket.emit("add_user", customerInfo.id, customerInfo);
-    },
-    [customerInfo]
-  );
+  // useEffect(
+  //   function () {
+  //     socket.emit("add_user", customerInfo.id, customerInfo);
+  //   },
+  //   [customerInfo]
+  // );
 
   useEffect(
     function () {
@@ -66,18 +66,8 @@ function Chat() {
     setSendText("");
   }
 
-  useEffect(
-    function () {
-      if (successMessage) {
-        socket.emit(
-          "send_customer_message",
-          customer_side_messages[customer_side_messages.length - 1]
-        );
-
-        dispatch(messageClear());
-      }
-    },
-    [successMessage, customer_side_messages, dispatch]
+  const filter = activeSeller.some(
+    (each) => each.sellerId === customer_current_friend?.fbId
   );
 
   useEffect(function () {
@@ -91,32 +81,51 @@ function Chat() {
 
   useEffect(
     function () {
+      if (filter) {
+        if (successMessage) {
+          socket.emit(
+            "send_customer_message",
+            customer_side_messages[customer_side_messages.length - 1]
+          );
+
+          dispatch(messageClear());
+        }
+      } else {
+        dispatch(messageClear());
+      }
+    },
+    [successMessage, customer_side_messages, dispatch, filter]
+  );
+
+  useEffect(
+    function () {
       if (messageSocket) {
         if (
           sellerId === messageSocket.senderId &&
           customerInfo.id === messageSocket.receivewId
         ) {
           dispatch(updateMessage(messageSocket));
+          setMessageSocket("");
         } else {
+          console.log(messageSocket);
           toast.success(`A message from ${messageSocket.senderName}`, {
             autoClose: 1500,
           });
-          dispatch(messageClear());
+          setMessageSocket("");
         }
       }
     },
     [messageSocket, customerInfo, sellerId, dispatch]
   );
 
-  useEffect(
-    function () {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    },
-    [customer_side_messages]
-  );
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [customer_side_messages]);
 
   return (
-    <div className="bg-white p-3 rounded-md">
+    <div className="bg-white p-3 rounded-md ">
       <div className="w-full flex">
         <div className="w-[230px]">
           <div className="flex justify-center gap-3 items-center text-slate-600 text-xl h-[50px]">
@@ -125,6 +134,7 @@ function Chat() {
             </span>
             <span>Message</span>
           </div>
+
           <div className="w-full flex flex-col text-slate-600 py-4 h-[400px] pr-3 gap-3">
             {customer_side?.map((each, index) => (
               <NavLink
@@ -150,6 +160,7 @@ function Chat() {
             ))}
           </div>
         </div>
+
         <div className="w-[calc(100%-230px)]">
           {customer_current_friend ? (
             <div className="w-full h-full">
@@ -166,27 +177,10 @@ function Chat() {
                 </div>
                 <span>{customer_current_friend.name}</span>
               </div>
-              <div className="h-[400px] w-full bg-slate-100 p-3 rounded-md">
+              <div className="h-[400px] w-full bg-slate-100 p-3 rounded-md overflow-y-auto">
                 <div className="w-full h-full overflow-y-auto flex flex-col gap-3">
                   {customer_side_messages.map((each, index) => {
                     if (customer_current_friend?.fbId !== each.receivewId) {
-                      return (
-                        <div
-                          key={index}
-                          className="w-full flex gap-2 justify-end items-center text-[14px]"
-                          ref={scrollRef}
-                        >
-                          <img
-                            className="w-[30px] h-[30px]"
-                            src="http://localhost:3000/images/user.png"
-                            alt=""
-                          />
-                          <div className="p-2 bg-purple-500 text-white rounded-md">
-                            <span>{each.messages}</span>
-                          </div>
-                        </div>
-                      );
-                    } else {
                       return (
                         <div
                           key={index}
@@ -195,12 +189,32 @@ function Chat() {
                         >
                           <img
                             className="w-[30px] h-[30px]"
-                            src="http://localhost:3000/images/user.png"
+                            src={
+                              customer_current_friend.image ||
+                              "http://localhost:3000/images/image/register.jpg"
+                            }
                             alt=""
                           />
-                          <div className="p-2 bg-cyan-500 text-white rounded-md">
+                          <div className="p-2  bg-white  text-[#212529] py-2 px-3 rounded-md">
                             <span>{each.messages}</span>
                           </div>
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div
+                          key={index}
+                          className="w-full flex gap-2 justify-end items-center text-[14px]"
+                          ref={scrollRef}
+                        >
+                          <div className="p-2 bg-green-500 text-[#212529] px-2 py-2 rounded-md">
+                            <span>{each.messages}</span>
+                          </div>
+                          <img
+                            className="w-[30px] h-[30px]"
+                            src="http://localhost:3000/images/admin.jpg"
+                            alt=""
+                          />
                         </div>
                       );
                     }

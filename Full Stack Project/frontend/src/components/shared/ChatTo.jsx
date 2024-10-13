@@ -1,4 +1,4 @@
-function ChatTo({ currentCustomer, customerId }) {
+function ChatTo({ currentCustomer, customerId, activeCustomer }) {
   return (
     <>
       {customerId && (
@@ -9,7 +9,10 @@ function ChatTo({ currentCustomer, customerId }) {
               src="http://localhost:3000/images/admin.jpg"
               alt=""
             />
-            <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+
+            {activeCustomer.some((each) => each.customerId === customerId) && (
+              <div className="w-[10px] h-[10px] bg-green-500 rounded-full absolute right-0 bottom-0"></div>
+            )}
           </div>
           <div>{currentCustomer.name}</div>
         </div>

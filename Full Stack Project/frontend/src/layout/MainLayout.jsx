@@ -10,8 +10,10 @@ import {
   updateCustomer,
   updateMessage,
   updateSeller,
+  updateAdmin,
   updateSellerMessage,
   updateAdminMessage,
+  messageClear,
 } from "../store/Reducers/chatInReducer";
 
 function MainLayout() {
@@ -30,25 +32,42 @@ function MainLayout() {
     function () {
       if (userInfo && userInfo.role === "seller") {
         socket.emit("add_seller", userInfo._id, userInfo);
-      } else {
+
+        socket.on("activeAdmin", (activeAdmin) => {
+          dispatch(updateAdmin(activeAdmin));
+        });
+
+        socket.on("activeCustomer", (activeCustomer) => {
+          dispatch(updateCustomer(activeCustomer));
+        });
+      } else if (userInfo && userInfo.role === "admin") {
         socket.emit("add_admin", userInfo);
+        socket.on("activeSeller", (activeSeller) => {
+          dispatch(updateSeller(activeSeller));
+        });
       }
     },
-    [userInfo, socket]
+    [userInfo, socket, dispatch]
   );
 
-  useEffect(
-    function () {
-      socket.on("activeCustomer", (activeCustomer) => {
-        dispatch(updateCustomer(activeCustomer));
-      });
+  // useEffect(
+  //   function () {
+  //     socket.on("activeCustomer", (activeCustomer) => {
+  //       dispatch(updateCustomer(activeCustomer));
+  //     });
 
-      socket.on("activeSeller", (activeSeller) => {
-        dispatch(updateSeller(activeSeller));
-      });
-    },
-    [socket, dispatch]
-  );
+  //     socket.on("activeSeller", (activeSeller) => {
+  //       console.log("seller是active的");
+  //       dispatch(updateSeller(activeSeller));
+  //     });
+
+  //     socket.on("activeAdmin", (activeAdmin) => {
+  //       console.log("admin没激活吗?");
+  //       dispatch(updateAdmin(activeAdmin));
+  //     });
+  //   },
+  //   [socket, dispatch]
+  // );
 
   useEffect(
     function () {
@@ -62,33 +81,47 @@ function MainLayout() {
   useEffect(
     function () {
       socket.on("get_admin_message", (newMessages) => {
+        if (newMessages.receivewId !== userInfo._id) {
+          setMessageSocket(newMessages);
+          return;
+        }
+
         dispatch(updateSellerMessage(newMessages));
       });
     },
-    [dispatch, socket]
+    [dispatch, socket, messageSocket, userInfo]
   );
+
+  const { sellerId } = useParams();
 
   useEffect(
     function () {
       socket.on("get_seller_message", (newMessages) => {
+        if (sellerId !== newMessages.senderId) {
+          setMessageSocket(newMessages);
+          return;
+        }
+
         dispatch(updateAdminMessage(newMessages));
       });
     },
-    [dispatch, socket]
+    [dispatch, socket, sellerId, messageSocket]
   );
 
   useEffect(
     function () {
-      if (messageSocket) {
+      if (messageSocket !== "") {
         if (
           customerId === messageSocket.senderId &&
           userInfo._id === messageSocket.receivewId
         ) {
           dispatch(updateMessage(messageSocket));
+          setMessageSocket("");
         } else {
           toast.success(`A message from ${messageSocket.senderName}`, {
-            autoClose: 1500,
+            autoClose: 1000,
           });
+          setMessageSocket("");
         }
       }
     },
@@ -105,8 +138,8 @@ function MainLayout() {
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
       ></SideBar>
-      <div className="ml-0 lg:ml-[260px] pt-[95px] transition-all ">
-        <div className="px-2 md:px-7 py-5">
+      <div className="ml-0 lg:ml-[260px] pt-[95px] transition-all h-full ">
+        <div className="px-2 md:px-7 py-5 bg-slate-300 h-full min-h-screen">
           <Outlet></Outlet>
         </div>
       </div>

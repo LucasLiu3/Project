@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 
 import { MdEmail } from "react-icons/md";
 import { IoIosPhonePortrait } from "react-icons/io";
@@ -9,6 +9,9 @@ import HomeSearch from "./HomeSearch";
 import { useDispatch, useSelector } from "react-redux";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { getCartProduct, getWishList } from "../../store/Reducers/cartReducer";
+import socket from "./../../utils/socket";
+import { updateMessage } from "../../store/Reducers/chatReducer";
+import toast from "react-hot-toast";
 
 function Header() {
   const dispatch = useDispatch();
@@ -18,6 +21,8 @@ function Header() {
   const { cartTotal, wishListTotal } = useSelector((state) => state.cart);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [messageSocket, setMessageSocket] = useState("");
+  const [activeSeller, setActiveSeller] = useState([]);
 
   useEffect(
     function () {
@@ -46,6 +51,50 @@ function Header() {
     { path: "/about", name: "About" },
     { path: "/contact", name: "Contact" },
   ];
+
+  useEffect(
+    function () {
+      if (customerInfo) {
+        socket.emit("add_user", customerInfo.id, customerInfo);
+      }
+    },
+    [customerInfo]
+  );
+
+  // useEffect(
+  //   function () {
+  //     if (customerInfo) {
+  //       socket.on("seller_message", (messages) => {
+  //         setMessageSocket(messages);
+  //       });
+  //       socket.on("activeSeller", (sellers) => {
+  //         setActiveSeller(sellers);
+  //       });
+  //     }
+  //   },
+  //   [customerInfo]
+  // );
+
+  // const { sellerId } = useParams();
+
+  // useEffect(
+  //   function () {
+  //     if (messageSocket) {
+  //       if (
+  //         sellerId === messageSocket.senderId &&
+  //         customerInfo.id === messageSocket.receivewId
+  //       ) {
+  //         dispatch(updateMessage(messageSocket));
+  //       } else {
+  //         toast.success(`A message from ${messageSocket.senderName}`, {
+  //           autoClose: 1500,
+  //         });
+  //         setMessageSocket("");
+  //       }
+  //     }
+  //   },
+  //   [messageSocket, customerInfo, sellerId, dispatch]
+  // );
 
   return (
     <div className="w-full bg-white">

@@ -20,10 +20,24 @@ function Shop() {
   let { productsAll, loader } = useSelector((state) => state.product);
   const { category } = useSelector((state) => state.category);
 
+  const {
+    cart,
+    successMessage: addcartsuccess,
+    errorMessage: addcarterror,
+  } = useSelector((state) => state.cart);
+
+  useEffect(
+    function () {
+      dispatch(getProductsAll());
+      dispatch(getCategory());
+    },
+    [dispatch]
+  );
+
   const lowestPrice =
-    Math.floor(Math.min(...productsAll.map((each) => each.price)) / 5) * 5;
+    Math.floor(Math.min(...productsAll?.map((each) => each.price)) / 5) * 5;
   const HighestPrice =
-    Math.ceil(Math.max(...productsAll.map((each) => each.price)) / 5) * 5;
+    Math.ceil(Math.max(...productsAll?.map((each) => each.price)) / 5) * 5;
 
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(6);
@@ -39,32 +53,32 @@ function Shop() {
   const [sortFilter, setSortFilter] = useState("");
 
   if (priceRange)
-    productsAll = productsAll.filter(
+    productsAll = productsAll?.filter(
       (each) =>
         each.price >= priceRange.values[0] && each.price <= priceRange.values[1]
     );
   if (ratingSelected === 0) {
-    productsAll = productsAll.filter((each) => each.rating === ratingSelected);
+    productsAll = productsAll?.filter((each) => each.rating === ratingSelected);
   }
   if (ratingSelected > 0) {
-    productsAll = productsAll.filter(
+    productsAll = productsAll?.filter(
       (each) =>
         each.rating >= ratingSelected && each.rating < ratingSelected + 1
     );
   }
   if (categorySelected)
-    productsAll = productsAll.filter(
+    productsAll = productsAll?.filter(
       (each) => each.category === categorySelected
     );
   if (sortFilter) {
     if (sortFilter === "low-high-price")
-      productsAll = productsAll.sort((a, b) => a.price - b.price);
+      productsAll = productsAll?.sort((a, b) => a.price - b.price);
     else if (sortFilter === "high-low-price")
-      productsAll = productsAll.sort((a, b) => b.price - a.price);
+      productsAll = productsAll?.sort((a, b) => b.price - a.price);
     else if (sortFilter === "low-high-rating")
-      productsAll = productsAll.sort((a, b) => a.rating - b.rating);
+      productsAll = productsAll?.sort((a, b) => a.rating - b.rating);
     else if (sortFilter === "high-low-rating")
-      productsAll = productsAll.sort((a, b) => b.rating - a.rating);
+      productsAll = productsAll?.sort((a, b) => b.rating - a.rating);
   }
 
   let productsAllShow = productsAll?.slice(startIndex, endIndex);
@@ -74,20 +88,6 @@ function Shop() {
     setRatingSelected("");
     setCategorySelected("");
   }
-
-  const {
-    cart,
-    successMessage: addcartsuccess,
-    errorMessage: addcarterror,
-  } = useSelector((state) => state.cart);
-
-  useEffect(
-    function () {
-      dispatch(getProductsAll());
-      dispatch(getCategory());
-    },
-    [dispatch]
-  );
 
   useEffect(() => {
     if (addcartsuccess) {
@@ -99,6 +99,8 @@ function Shop() {
       dispatch(messageClear());
     }
   }, [addcartsuccess, addcarterror, dispatch]);
+
+  if (loader) return <div>Loading....</div>;
 
   return (
     <div>
@@ -269,13 +271,21 @@ function Shop() {
                 </div>
 
                 <div className="pb-8">
-                  {loader ? (
-                    <div>Loading...</div>
-                  ) : (
+                  {productsAllShow?.length > 0 ? (
                     <div className="w-full grid grid-cols-3 gap-3">
-                      {productsAllShow?.map((c, i) => (
-                        <ProductCard rating={c.rating} key={i} product={c} />
+                      {productsAllShow.map((c, i) => (
+                        <ProductCard
+                          rating={c.rating}
+                          key={i}
+                          product={c}
+                        ></ProductCard>
                       ))}
+                    </div>
+                  ) : (
+                    <div className="w-full flex justify-center items-center">
+                      <span className="text-2xl font-bold">
+                        No Product Found!
+                      </span>
                     </div>
                   )}
                 </div>

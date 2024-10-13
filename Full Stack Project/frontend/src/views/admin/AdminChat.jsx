@@ -61,29 +61,39 @@ function AdminChat() {
     [sellerId, dispatch]
   );
 
-  useEffect(
-    function () {
-      if (successMessage) {
-        socket.emit(
-          "send_message_admin_to_seller",
-          seller_admin_message[seller_admin_message.length - 1]
-        );
-
-        dispatch(messageClear());
-      }
-    },
-    [successMessage, seller_admin_message, dispatch]
+  const filter = activeSeller.some(
+    (each) => each.sellerId === currentSeller._id
   );
 
   useEffect(
     function () {
-      scrollref.current?.scrollIntoView({ behavior: "smooth" });
+      if (successMessage) {
+        if (filter) {
+          socket.emit(
+            "send_message_admin_to_seller",
+            seller_admin_message[seller_admin_message.length - 1]
+          );
+
+          dispatch(messageClear());
+        } else {
+          dispatch(messageClear());
+        }
+      }
+    },
+    [successMessage, seller_admin_message, dispatch, filter]
+  );
+
+  useEffect(
+    function () {
+      if (scrollref.current) {
+        scrollref.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
     },
     [seller_admin_message]
   );
 
   return (
-    <div className="w-full bg-[#6a5fdf] px-4 py-4 rounded-md h-[calc(100vh-140px)]">
+    <div className="w-full bg-[#f8f9fa]  px-4 py-4 rounded-md h-[calc(100vh-140px)]">
       <div className="flex w-full h-full relative">
         <div
           className={`w-[280px] h-full absolute z-10 ${
@@ -91,7 +101,7 @@ function AdminChat() {
           } md:left-0 md:relative transition-all `}
         >
           <div className="w-full h-[calc(100vh-177px)] bg-[#9e97e9] md:bg-transparent overflow-y-auto">
-            <div className="flex text-xl justify-between items-center p-4 md:p-0 md:px-3 md:pb-3 text-white">
+            <div className="flex text-xl justify-between items-center p-4 md:p-0 md:px-3 md:pb-3 text-[#212529]">
               <h2>Sellers</h2>
               <span
                 onClick={() => setShow(!show)}
@@ -106,8 +116,8 @@ function AdminChat() {
                 <NavLink
                   key={index}
                   className={({ isActive }) =>
-                    `h-[60px] flex justify-start gap-2 items-center text-white px-2 py-2 rounded-md cursor-pointer 
-                     ${isActive ? "bg-[#8288ed]" : "bg-transparent"}`
+                    `h-[60px] flex justify-start gap-2 items-center text-[#212529] px-2 py-2 rounded-md cursor-pointer 
+                     ${isActive ? "bg-indigo-300" : "bg-transparent"}`
                   }
                   to={`/admin/chat/${each._id}`}
                 >
@@ -115,7 +125,8 @@ function AdminChat() {
                     <img
                       className="w-[38px] h-[38px] border-white border-2 max-w-[38px] p-[2px] rounded-full"
                       src={
-                        each.image || "http://localhost:3000/images/admin.jpg"
+                        each.image ||
+                        "http://localhost:3000/images/image/register.jpg"
                       }
                       alt=""
                     />
@@ -145,7 +156,7 @@ function AdminChat() {
                     className="w-[45px] h-[45px] border-green-500 border-2 max-w-[45px] p-[2px] rounded-full"
                     src={
                       currentSeller.image ||
-                      "http://localhost:3000/images/admin.jpg"
+                      "http://localhost:3000/images/image/register.jpg"
                     }
                     alt=""
                   />
@@ -170,7 +181,7 @@ function AdminChat() {
           </div>
 
           <div className="py-4">
-            <div className="bg-[#475569] h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
+            <div className="bg-slate-300 h-[calc(100vh-290px)] rounded-md p-3 overflow-y-auto">
               {sellerId ? (
                 seller_admin_message.map((each, index) => {
                   if (each.senderId === sellerId) {
@@ -184,11 +195,14 @@ function AdminChat() {
                           <div>
                             <img
                               className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
-                              src="http://localhost:3000/images/admin.jpg"
+                              src={
+                                currentSeller.image ||
+                                "http://localhost:3000/images/image/register.jpg"
+                              }
                               alt=""
                             />
                           </div>
-                          <div className="flex justify-center items-start flex-col w-full bg-blue-500 shadow-lg shadow-blue-500/50 text-white py-1 px-2 rounded-sm">
+                          <div className="flex justify-center items-start flex-col w-full bg-white  text-[#212529] py-2 px-3 rounded-md">
                             <span>{each.message}</span>
                           </div>
                         </div>
@@ -202,13 +216,13 @@ function AdminChat() {
                         ref={scrollref}
                       >
                         <div className="flex justify-start items-start gap-2 md:px-3 py-2 max-w-full lg:max-w-[85%]">
-                          <div className="flex justify-center items-start flex-col w-full bg-red-500 shadow-lg shadow-red-500/50 text-white py-1 px-2 rounded-sm">
+                          <div className="flex justify-center items-start flex-col w-full bg-green-500  text-[#212529] py-2 px-3 rounded-md">
                             <span>{each.message}</span>
                           </div>
                           <div>
                             <img
                               className="w-[38px] h-[38px] border-2 border-white rounded-full max-w-[38px] p-[3px]"
-                              src="http://localhost:3000/images/admin.jpg"
+                              src="http://localhost:3000/images/admin.png"
                               alt=""
                             />
                           </div>
@@ -227,7 +241,7 @@ function AdminChat() {
 
           <form onSubmit={sendText} className="flex gap-3">
             <input
-              className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#d0d2d6]"
+              className="w-full flex justify-between px-2 border border-slate-700 items-center py-[5px] focus:border-blue-500 rounded-md outline-none bg-transparent text-[#212529]"
               type="text"
               placeholder="Input Your Message"
               value={text}

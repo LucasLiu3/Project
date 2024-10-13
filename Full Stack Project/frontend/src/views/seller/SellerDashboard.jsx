@@ -42,7 +42,7 @@ function SellerDashboard() {
 
       <div className="w-full flex flex-wrap mt-7 ">
         <div className="w-full lg:w-7/12 lg:pr-3">
-          <div className="w-full bg-[#6a5fdf] p-4 rounded-md">
+          <div className="w-full bg-[#f8f9fa] p-4 rounded-md">
             <DashoboardChart role="seller" />
           </div>
         </div>
@@ -54,7 +54,7 @@ function SellerDashboard() {
           ></DashboardMessage>
         </div>
 
-        <div className="w-full p-4 bg-[#6a5fdf] rounded-md mt-6">
+        <div className="w-full p-4 bg-[#f8f9fa] rounded-md mt-6">
           <DashboardOrders
             role="seller"
             recentOrder={recentOrder}

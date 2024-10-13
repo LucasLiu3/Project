@@ -41,7 +41,7 @@ function SellerProfile() {
   return (
     <div className="w-full flex flex-wrap">
       <div className="w-full md:w-6/12">
-        <div className="w-full p-4 bg-[#6a5fdf] rounded-md text-[#d0d2d6]">
+        <div className="w-full p-4 bg-[#f8f9fa] rounded-md text-[#212529]">
           <SellerProfilePic
             userInfo={profile}
             loader={loader}

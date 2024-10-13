@@ -50,7 +50,7 @@ function AdminSellersPage() {
   );
 
   return (
-    <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
+    <div className="w-full p-4 bg-[#f8f9fa] rounded-md">
       <div>
         <Filter
           perPage={perPage}
@@ -60,7 +60,7 @@ function AdminSellersPage() {
       </div>
 
       <div className="relative mt-5 overflow-y-auto">
-        <table className="w-full text-sm text-[#d0d2d6]">
+        <table className="w-full text-sm text-[#212529]">
           <thead className=" uppercase border-b border-slate-700">
             <HeadModule headerTitle={headerTitle}></HeadModule>
           </thead>

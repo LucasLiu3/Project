@@ -111,7 +111,7 @@ export function ContentModule({ data, content, role, approvelRequest }) {
         </th>
         {each.amount && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            {each.amount}
+            $ {each.amount.toFixed(2)}
           </th>
         )}
         {each.status && (
@@ -246,7 +246,7 @@ export function ContentModule({ data, content, role, approvelRequest }) {
 
         {each.price && (
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            ${each.price}
+            ${each.price.toFixed(2)}
           </th>
         )}
 
@@ -254,11 +254,9 @@ export function ContentModule({ data, content, role, approvelRequest }) {
           {each.discount ? `${each.discount}%` : "-"}
         </th>
 
-        {each.stock && (
-          <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
-            {each.stock}
-          </th>
-        )}
+        <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap">
+          {each.stock}
+        </th>
 
         {
           <th scope="row" className="py-2 px-6 font-medium whitespace-nowrap ">

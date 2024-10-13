@@ -116,7 +116,7 @@ const chatInReducer = createSlice({
     messages: [],
     activeCustomer: [],
     activeSeller: [],
-    adtiveAdmin: "",
+    activeAdmin: "",
     friends: [],
     seller_admin_message: [],
     currentSeller: {},
@@ -139,6 +139,9 @@ const chatInReducer = createSlice({
     },
     updateCustomer: (state, { payload }) => {
       state.activeCustomer = payload;
+    },
+    updateAdmin: (state, { payload }) => {
+      state.activeAdmin = payload;
     },
     updateSellerMessage: (state, { payload }) => {
       state.seller_admin_message = [...state.seller_admin_message, payload];
@@ -188,6 +191,7 @@ export const {
   updateCustomer,
   updateSellerMessage,
   updateAdminMessage,
+  updateAdmin,
 } = chatInReducer.actions;
 export const { updateMessage } = chatInReducer.actions;
 

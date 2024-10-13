@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { get_my_orders } from "../../../store/Reducers/CustomerDashboardReducer";
 import { pay_later } from "../../../store/Reducers/orderReducer";
+import Pagination from "../../Pagination";
 const MyOrders = () => {
   const dispatch = useDispatch();
 
@@ -13,9 +14,21 @@ const MyOrders = () => {
 
   const { orders } = useSelector((state) => state.customerDashboard);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+
+  const startIndex = (currentPage - 1) * perPage;
+  const endIndex = startIndex + perPage;
+
   useEffect(
     function () {
       dispatch(get_my_orders(customerInfo.id));
+
+      const interval = setInterval(() => {
+        dispatch(get_my_orders(customerInfo.id));
+      }, 30000);
+
+      return () => clearInterval(interval);
     },
     [dispatch, customerInfo.id]
   );
@@ -31,9 +44,11 @@ const MyOrders = () => {
   ).length;
 
   let showOrders;
-  if (state === "all") showOrders = orders;
+  if (state === "all") showOrders = orders.slice(startIndex, endIndex);
   else {
-    showOrders = orders.filter((each) => each.delivery_status === state);
+    showOrders = orders
+      .filter((each) => each.delivery_status === state)
+      .slice(startIndex, endIndex);
   }
 
   function redirect(orderId) {
@@ -161,14 +176,15 @@ const MyOrders = () => {
                           </span>
                         </Link>
 
-                        {each.payment_status === "unpaid" && (
-                          <span
-                            onClick={() => redirect(each._id)}
-                            className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded hover:cursor-pointer"
-                          >
-                            Pay Now
-                          </span>
-                        )}
+                        {each.payment_status === "unpaid" &&
+                          each.delivery_status !== "cancelled" && (
+                            <span
+                              onClick={() => redirect(each._id)}
+                              className="bg-green-200 text-green-800 text-md font-semibold mr-2 px-3 py-[2px] rounded hover:cursor-pointer"
+                            >
+                              Pay Now
+                            </span>
+                          )}
                       </td>
                     </tr>
                   ))
@@ -179,6 +195,15 @@ const MyOrders = () => {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex justify-end h-full mt-5 pr-10">
+            <Pagination
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              perPage={perPage}
+              totalItem={state === "all" ? orders.length : showOrders.lenght}
+              showPageNmber={3}
+            ></Pagination>
           </div>
         </div>
       </div>
