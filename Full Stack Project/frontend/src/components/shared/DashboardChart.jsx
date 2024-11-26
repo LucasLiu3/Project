@@ -1,19 +1,58 @@
 import Chart from "react-apexcharts";
+import { useSelector } from "react-redux";
 
 function DashoboardChart({ role }) {
+  const { allOrder } = useSelector((state) => state.dashboard);
+
+  const monthlyOrders = Array(12).fill(0);
+
+  allOrder.forEach((each) => {
+    const [day, month, year] = each.data.split("/");
+    const date = new Date(`${year}-${month}-${day}`);
+
+    const monthIndex = date.getMonth();
+
+    monthlyOrders[monthIndex] += 1;
+  });
+
+  const sales = Array(12).fill(0);
+
+  allOrder.forEach((each) => {
+    const [day, month, year] = each.data.split("/");
+    const date = new Date(`${year}-${month}-${day}`);
+
+    const monthIndex = date.getMonth();
+
+    sales[monthIndex] += each.price;
+  });
+
+  const revenue = Array(12).fill(0);
+
+  allOrder.forEach((each) => {
+    const [day, month, year] = each.data.split("/");
+    const date = new Date(`${year}-${month}-${day}`);
+
+    const monthIndex = date.getMonth();
+
+    if (each.delivery_status === "pending" && each.payment_status === "paid") {
+      revenue[monthIndex] += each.price;
+    }
+  });
+
+  console.log(monthlyOrders);
   const state = {
     series: [
       {
         name: "Orders",
-        data: [23, 34, 45, 56, 76, 34, 23, 76, 87, 78, 34, 45],
+        data: monthlyOrders,
       },
       {
         name: "Revenue",
-        data: [67, 39, 45, 56, 90, 56, 23, 56, 87, 78, 67, 78],
+        data: revenue,
       },
       {
         name: `${role === "admin" ? "Sellers" : "Sales"}`,
-        data: [34, 39, 56, 56, 80, 67, 23, 56, 98, 78, 45, 56],
+        data: sales,
       },
     ],
     options: {

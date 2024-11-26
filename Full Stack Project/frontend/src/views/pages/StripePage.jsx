@@ -20,7 +20,7 @@ function StripePage() {
 
     setTimeout(function () {
       navigate("/customerDashboard/myOrders");
-    }, 2000);
+    }, 3000);
   }, [orderId, dispatch, navigate]);
 
   return (

@@ -26,7 +26,7 @@ const MyOrders = () => {
 
       const interval = setInterval(() => {
         dispatch(get_my_orders(customerInfo.id));
-      }, 30000);
+      }, 300000);
 
       return () => clearInterval(interval);
     },

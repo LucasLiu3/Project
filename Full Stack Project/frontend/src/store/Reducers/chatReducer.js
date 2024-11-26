@@ -40,6 +40,7 @@ const chatReducer = createSlice({
     successMessage: "",
     errorMessage: "",
     loader: false,
+    activeSeller: [],
   },
 
   reducers: {

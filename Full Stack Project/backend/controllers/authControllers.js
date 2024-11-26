@@ -238,7 +238,7 @@ class authControllers {
 
       const totalProduct = await productModel.find({}).countDocuments();
 
-      const totalOrder = await customerOrder.find({}).countDocuments();
+      const totalOrder = await adminOrder.find({}).countDocuments();
 
       const totalSeller = await sellerModel.find({}).countDocuments();
 
@@ -249,6 +249,8 @@ class authControllers {
 
       const recentOrder = await customerOrder.find({}).limit(5);
 
+      const allOrder = await adminOrder.find({});
+
       return responseReturn(res, 201, {
         totalProduct,
         totalOrder,
@@ -256,6 +258,7 @@ class authControllers {
         messages,
         recentOrder,
         totalSale: totalSale[0].totalAmount,
+        allOrder,
       });
     } catch (error) {
       console.log(err);
@@ -292,7 +295,7 @@ class authControllers {
       const totalOrder = await adminOrder
         .find({ sellerId: new Object(id) })
         .countDocuments();
-      console.log("2");
+
       const totalPendingOrder = await adminOrder
         .find({
           $and: [
@@ -317,6 +320,9 @@ class authControllers {
         .find({ sellerId: new Object(id) })
         .sort({ createdAt: -1 })
         .limit(5);
+
+      const allOrder = await adminOrder.find({ sellerId: new Object(id) });
+
       return responseReturn(res, 201, {
         totalProduct,
         totalOrder,
@@ -324,6 +330,7 @@ class authControllers {
         messages,
         recentOrder,
         totalSale: totalSale[0]?.totalAmount ? totalSale[0].totalAmount : 0,
+        allOrder,
       });
     } catch (error) {
       console.log(error.message);

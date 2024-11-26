@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 import { MdEmail } from "react-icons/md";
 import { IoIosPhonePortrait } from "react-icons/io";

@@ -12,7 +12,7 @@ function OrderDetail() {
 
   const [timeLeft, setTimeLeft] = useState(null);
 
-  const PAYMENT_DEADLINE = 30;
+  const PAYMENT_DEADLINE = 60;
 
   useEffect(() => {
     if (

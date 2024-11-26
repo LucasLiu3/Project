@@ -3,7 +3,7 @@ import { AiOutlineMessage, AiOutlinePlus } from "react-icons/ai";
 import { GrEmoji } from "react-icons/gr";
 import { IoSend } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 
 import {
   customer_add_friends,
@@ -32,6 +32,7 @@ function Chat() {
   const [sendText, setSendText] = useState("");
   const [messageSocket, setMessageSocket] = useState("");
   const [activeSeller, setActiveSeller] = useState([]);
+  const location = useLocation();
 
   // useEffect(
   //   function () {
@@ -71,12 +72,17 @@ function Chat() {
   );
 
   useEffect(function () {
-    socket.on("seller_message", (messages) => {
-      setMessageSocket(messages);
-    });
     socket.on("activeSeller", (sellers) => {
       setActiveSeller(sellers);
     });
+    socket.on("seller_message", (messages) => {
+      setMessageSocket(messages);
+    });
+
+    return () => {
+      socket.off("seller_message");
+      socket.off("activeSeller");
+    };
   }, []);
 
   useEffect(

@@ -19,6 +19,7 @@ import StripePage from "../../views/pages/StripePage";
 import OrderDetail from "./../../components/customers/dashboard/OrderDetail";
 import Chat from "../../components/customers/dashboard/Chat";
 import StripeAccount from "../../views/seller/StripeAccount.jsx";
+import OrderCancel from "../../views/pages/OrderCancel.jsx";
 
 const Home = lazy(() => import("../../views/pages/Home"));
 const SellerLogin = lazy(() => import("../../views/auth/SellerLogin"));
@@ -115,6 +116,10 @@ const publicRoutesList = [
   {
     path: "/paymentSuccess/:orderId",
     element: <StripePage></StripePage>,
+  },
+  {
+    path: "/order_cancel",
+    element: <OrderCancel></OrderCancel>,
   },
 ];
 

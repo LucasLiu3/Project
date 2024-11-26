@@ -41,6 +41,7 @@ const dashboardReducer = createSlice({
     totalSeller: 0,
     recentOrder: [],
     recentMessage: [],
+    allOrder: [],
   },
 
   reducers: {
@@ -58,6 +59,7 @@ const dashboardReducer = createSlice({
         state.totalSeller = payload.totalSeller;
         state.recentOrder = payload.recentOrder;
         state.recentMessage = payload.messages;
+        state.allOrder = payload.allOrder;
       })
       .addCase(seller_get_dashboard_data.fulfilled, (state, { payload }) => {
         state.totalSale = payload.totalSale;
@@ -66,6 +68,7 @@ const dashboardReducer = createSlice({
         state.totalPendingOrder = payload.totalPendingOrder;
         state.recentOrder = payload.recentOrder;
         state.recentMessage = payload.messages;
+        state.allOrder = payload.allOrder;
       });
   },
 });

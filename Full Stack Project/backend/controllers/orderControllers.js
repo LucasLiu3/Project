@@ -50,7 +50,7 @@ class orderControllers {
 
     let adminOrdeDate = [];
     let cartId = [];
-    // const tempDate = moment(Date.now()).toDate();
+
     const tempDate = moment().tz("Pacific/Auckland").format("DD/MM/YYYY");
 
     let customerOrderProduct = [];
@@ -87,6 +87,25 @@ class orderControllers {
     }, []);
 
     try {
+      const outOfStock = await Promise.all(
+        customerOrderProduct.map(async (each) => {
+          const product = await productModel.findById(each._id);
+
+          return each.quantity > product.stock;
+        })
+      ).then((results) => results.some((result) => result));
+
+      if (outOfStock) {
+        try {
+          return responseReturn(res, 200, {
+            paymentUrl: `http://localhost:3000/order_cancel`,
+          });
+        } catch (err) {
+          console.log(err);
+          return responseReturn(res, 500, { error: err.message });
+        }
+      }
+
       const order = await customerOrder.create({
         customerId: customerInfo.id,
         shippingInfo: info,
@@ -112,13 +131,15 @@ class orderControllers {
 
       await adminOrder.insertMany(adminOrdeDate);
 
-      for (let i = 0; i < cartId.length; i++) {
-        await cartModel.findOneAndDelete(cartId[i]);
+      if (cartId.some((each) => each !== undefined)) {
+        for (let i = 0; i < cartId.length; i++) {
+          await cartModel.findOneAndDelete(cartId[i]);
+        }
       }
 
       setTimeout(() => {
         this.paymentCheck(order.id);
-      }, 30000);
+      }, 60000);
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
@@ -160,6 +181,34 @@ class orderControllers {
 
     try {
       const products = await customerOrder.findById(new ObjectId(orderId));
+
+      const outOfStock = await Promise.all(
+        products.product.map(async (each) => {
+          const product = await productModel.findById(each._id);
+
+          return each.quantity > product.stock;
+        })
+      ).then((results) => results.some((result) => result));
+
+      if (outOfStock) {
+        try {
+          await customerOrder.findByIdAndUpdate(new ObjectId(orderId), {
+            delivery_status: "cancelled",
+          });
+
+          await adminOrder.updateMany(
+            { orderId: new ObjectId(orderId) },
+            { delivery_status: "cancelled" }
+          );
+
+          return responseReturn(res, 200, {
+            paymentUrl: `http://localhost:3000/order_cancel`,
+          });
+        } catch (err) {
+          console.log(err);
+          return responseReturn(res, 500, { error: err.message });
+        }
+      }
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
